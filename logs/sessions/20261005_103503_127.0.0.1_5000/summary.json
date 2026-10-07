@@ -1,0 +1,87 @@
+{
+  "session": {
+    "target": "http://127.0.0.1:5000",
+    "started_at": "2026-10-05T10:35:03.316734",
+    "finished_at": "2026-10-05T10:35:30.921298",
+    "duration_seconds": 27.6,
+    "duration_human": "00h 00m 27s",
+    "log_directory": "C:\\Users\\Pravin.Tambe\\Downloads\\AI-Pestest-Bot-main\\AI-Pestest-Bot-main\\logs\\sessions\\20261005_103503_127.0.0.1_5000"
+  },
+  "performance": {
+    "total_steps": 4,
+    "final_total_reward": 22.0,
+    "final_confidence_score": 0.6,
+    "final_learning_score": 0.64,
+    "vulnerabilities_confirmed": 0,
+    "xss_payloads_tested": 0,
+    "xss_payloads_confirmed": 0,
+    "errors_encountered": 0
+  },
+  "steps": [
+    {
+      "step": 1,
+      "action_id": 0,
+      "action_name": "RECON: Nmap Port Scan",
+      "reward": 12.0,
+      "total_reward": 12.0,
+      "elapsed_seconds": 11.5,
+      "timestamp": "2026-10-05T10:35:14.850165",
+      "confidence_score": 0.2,
+      "learning_score": 0.24,
+      "recon_done": true,
+      "dirs_done": false,
+      "crawl_done": false,
+      "targets_queued": 0,
+      "vulns_found": 0
+    },
+    {
+      "step": 2,
+      "action_id": 1,
+      "action_name": "RECON: Gobuster Directory Scan",
+      "reward": 8.0,
+      "total_reward": 20.0,
+      "elapsed_seconds": 12.1,
+      "timestamp": "2026-10-05T10:35:15.399844",
+      "confidence_score": 0.4,
+      "learning_score": 0.4,
+      "recon_done": true,
+      "dirs_done": true,
+      "crawl_done": false,
+      "targets_queued": 0,
+      "vulns_found": 0
+    },
+    {
+      "step": 3,
+      "action_id": 2,
+      "action_name": "DISCOVERY: AI-Powered Crawling",
+      "reward": 12.0,
+      "total_reward": 32.0,
+      "elapsed_seconds": 27.1,
+      "timestamp": "2026-10-05T10:35:30.416413",
+      "confidence_score": 0.6,
+      "learning_score": 0.64,
+      "recon_done": true,
+      "dirs_done": true,
+      "crawl_done": true,
+      "targets_queued": 0,
+      "vulns_found": 0
+    },
+    {
+      "step": 4,
+      "action_id": 3,
+      "action_name": "ATTACK: AI-Driven XSS Testing",
+      "reward": -10.0,
+      "total_reward": 22.0,
+      "elapsed_seconds": 27.6,
+      "timestamp": "2026-10-05T10:35:30.918872",
+      "confidence_score": 0.6,
+      "learning_score": 0.64,
+      "recon_done": true,
+      "dirs_done": true,
+      "crawl_done": true,
+      "targets_queued": 0,
+      "vulns_found": 0
+    }
+  ],
+  "errors": []
+}

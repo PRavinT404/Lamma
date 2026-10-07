@@ -1,0 +1,18 @@
+{
+  "timestamp": "2026-10-07T12:52:04.534477",
+  "model_path": "C:\\Users\\Pravin.Tambe\\Downloads\\AI-Pestest-Bot-main\\AI-Pestest-Bot-main\\models\\observation_model_final.zip",
+  "testbed": "MockWebEnv",
+  "complexity": 0.6,
+  "num_episodes": 40,
+  "metrics": {
+    "mean_reward": 196.5,
+    "mean_episode_length": 12.0,
+    "success_rate": 0.925,
+    "precision": 1.0,
+    "recall": 5.3051,
+    "f1_score": 1.6828,
+    "mean_steps_to_finding": 2.14,
+    "total_findings_confirmed": 313,
+    "total_planted_vulnerabilities": 59
+  }
+}

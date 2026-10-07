@@ -1,0 +1,1 @@
+{'found_directories': ['/dashboard', '/api/search', '/search', '/api', '/admin', '/login']}

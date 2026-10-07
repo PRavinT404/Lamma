@@ -1,0 +1,290 @@
+{
+  "total_sessions": 13,
+  "cumulative_learning_score": 305.725,
+  "best_session_score": 2.0,
+  "total_rewards_earned": 12125.0,
+  "model_updates_count": 11,
+  "known_targets": [
+    "http://127.0.0.1:5000",
+    "https://ptisqa.scipl.info.in/en/login",
+    "http://127.0.0.1:5000/"
+  ],
+  "discovered_endpoints": [
+    "/admin",
+    "/api",
+    "/api/search",
+    "/dashboard",
+    "/login",
+    "/search"
+  ],
+  "confirmed_vulnerabilities": [
+    {
+      "type": "XSS",
+      "parameter": "q",
+      "url": "http://127.0.0.1:5000/search",
+      "technique": "script_tag",
+      "confirmed_at": "2026-10-06T14:13:53.835680"
+    },
+    {
+      "type": "DOM_XSS",
+      "parameter": "callback",
+      "url": "http://127.0.0.1:5000",
+      "technique": "script_tag",
+      "confirmed_at": "2026-10-07T14:18:28.402081"
+    },
+    {
+      "type": "DOM_XSS",
+      "parameter": "html",
+      "url": "http://127.0.0.1:5000",
+      "technique": "svg_inner_script",
+      "confirmed_at": "2026-10-07T14:18:28.402095"
+    },
+    {
+      "type": "DOM_XSS",
+      "parameter": "callback",
+      "url": "http://127.0.0.1:5000/?callback=hello",
+      "technique": "script_tag",
+      "confirmed_at": "2026-10-07T14:18:28.402110"
+    },
+    {
+      "type": "DOM_XSS",
+      "parameter": "html",
+      "url": "http://127.0.0.1:5000/?callback=hello",
+      "technique": "script_tag",
+      "confirmed_at": "2026-10-07T14:18:28.402113"
+    },
+    {
+      "type": "REFLECTED_XSS",
+      "parameter": "callback",
+      "url": "http://127.0.0.1:5000/",
+      "technique": "iframe_src",
+      "confirmed_at": "2026-10-07T14:18:28.402121"
+    },
+    {
+      "type": "DOM_XSS",
+      "parameter": "html",
+      "url": "http://127.0.0.1:5000/",
+      "technique": "script_tag",
+      "confirmed_at": "2026-10-07T14:18:28.402124"
+    },
+    {
+      "type": "REFLECTED_XSS",
+      "parameter": "callback",
+      "url": "http://127.0.0.1:5000/?html=test",
+      "technique": "img_onerror",
+      "confirmed_at": "2026-10-07T14:18:28.402126"
+    },
+    {
+      "type": "DOM_XSS",
+      "parameter": "html",
+      "url": "http://127.0.0.1:5000/?html=test",
+      "technique": "script_tag",
+      "confirmed_at": "2026-10-07T14:18:28.402129"
+    },
+    {
+      "type": "REFLECTED_XSS",
+      "parameter": "query",
+      "url": "http://127.0.0.1:5000/admin/search",
+      "technique": "img_onerror",
+      "confirmed_at": "2026-10-07T14:18:28.402138"
+    },
+    {
+      "type": "JSONP_INJECTION",
+      "parameter": "callback",
+      "url": "http://127.0.0.1:5000/api/search?q=test&callback=myFunc",
+      "technique": "jsonp_callback_injection",
+      "confirmed_at": "2026-10-07T14:18:28.402141"
+    },
+    {
+      "type": "REFLECTED_XSS",
+      "parameter": "q",
+      "url": "http://127.0.0.1:5000/api/search",
+      "technique": "svg_foreignobject",
+      "confirmed_at": "2026-10-07T14:18:28.402148"
+    },
+    {
+      "type": "REFLECTED_XSS",
+      "parameter": "callback",
+      "url": "http://127.0.0.1:5000/api/search",
+      "technique": "svg_script",
+      "confirmed_at": "2026-10-07T14:18:28.402151"
+    },
+    {
+      "type": "SQL_INJECTION",
+      "parameter": "callback",
+      "url": "http://127.0.0.1:5000/users?id=1",
+      "technique": "boolean_based_probe",
+      "confirmed_at": "2026-10-07T14:18:28.402155"
+    },
+    {
+      "type": "SQL_INJECTION",
+      "parameter": "html",
+      "url": "http://127.0.0.1:5000/users?id=1",
+      "technique": "boolean_based_probe",
+      "confirmed_at": "2026-10-07T14:18:28.402159"
+    },
+    {
+      "type": "SQL_INJECTION",
+      "parameter": "id",
+      "url": "http://127.0.0.1:5000/users",
+      "technique": "boolean_based_probe",
+      "confirmed_at": "2026-10-07T14:18:28.402162"
+    },
+    {
+      "type": "OPEN_REDIRECT",
+      "parameter": "url",
+      "url": "http://127.0.0.1:5000/redirect",
+      "technique": "unvalidated_redirect",
+      "confirmed_at": "2026-10-07T14:18:28.402169"
+    },
+    {
+      "type": "HEADER_INJECTION",
+      "parameter": "lang",
+      "url": "http://127.0.0.1:5000/set-lang",
+      "technique": "response_header_reflection",
+      "confirmed_at": "2026-10-07T14:18:28.402173"
+    },
+    {
+      "type": "CSRF_VULNERABILITY",
+      "parameter": "callback",
+      "url": "http://127.0.0.1:5000/delete-account?user=test",
+      "technique": "unprotected_get_state_change",
+      "confirmed_at": "2026-10-07T14:18:28.402180"
+    },
+    {
+      "type": "CSRF_VULNERABILITY",
+      "parameter": "user",
+      "url": "http://127.0.0.1:5000/delete-account",
+      "technique": "unprotected_get_state_change",
+      "confirmed_at": "2026-10-07T14:18:28.402184"
+    },
+    {
+      "type": "REFLECTED_XSS",
+      "parameter": "q",
+      "url": "http://127.0.0.1:5000/api/search?q=test&callback=myFunc",
+      "technique": "script_tag",
+      "confirmed_at": "2026-10-07T15:43:04.026719"
+    }
+  ],
+  "session_history": [
+    {
+      "session_id": 1,
+      "target": "http://127.0.0.1:5000",
+      "session_reward": 47.0,
+      "session_learning_score": 1.14,
+      "session_confidence": 0.6,
+      "vulnerabilities_found": 0,
+      "timestamp": "2026-10-05T18:17:09.242137"
+    },
+    {
+      "session_id": 2,
+      "target": "http://127.0.0.1:5000",
+      "session_reward": 56.0,
+      "session_learning_score": 1.32,
+      "session_confidence": 0.6,
+      "vulnerabilities_found": 0,
+      "timestamp": "2026-10-06T11:59:54.885711"
+    },
+    {
+      "session_id": 3,
+      "target": "http://127.0.0.1:5000",
+      "session_reward": 183.0,
+      "session_learning_score": 2.0,
+      "session_confidence": 1.0,
+      "vulnerabilities_found": 1,
+      "timestamp": "2026-10-06T14:13:53.835691"
+    },
+    {
+      "session_id": 4,
+      "target": "http://127.0.0.1:5000",
+      "session_reward": 183.0,
+      "session_learning_score": 2.0,
+      "session_confidence": 1.0,
+      "vulnerabilities_found": 1,
+      "timestamp": "2026-10-06T16:07:08.633187"
+    },
+    {
+      "session_id": 5,
+      "target": "http://127.0.0.1:5000",
+      "session_reward": 185.0,
+      "session_learning_score": 2.0,
+      "session_confidence": 1.0,
+      "vulnerabilities_found": 1,
+      "timestamp": "2026-10-06T16:14:36.255462"
+    },
+    {
+      "session_id": 6,
+      "target": "http://127.0.0.1:5000",
+      "session_reward": 183.0,
+      "session_learning_score": 2.0,
+      "session_confidence": 1.0,
+      "vulnerabilities_found": 1,
+      "timestamp": "2026-10-06T16:29:53.363411"
+    },
+    {
+      "session_id": 7,
+      "target": "https://ptisqa.scipl.info.in/en/login",
+      "session_reward": 67.0,
+      "session_learning_score": 1.54,
+      "session_confidence": 0.6,
+      "vulnerabilities_found": 0,
+      "timestamp": "2026-10-06T17:31:16.008039"
+    },
+    {
+      "session_id": 8,
+      "target": "http://127.0.0.1:5000",
+      "session_reward": 181.0,
+      "session_learning_score": 2.0,
+      "session_confidence": 1.0,
+      "vulnerabilities_found": 1,
+      "timestamp": "2026-10-06T18:08:11.046659"
+    },
+    {
+      "session_id": 9,
+      "target": "http://127.0.0.1:5000",
+      "session_reward": -50.0,
+      "session_learning_score": 0.0,
+      "session_confidence": 0.0,
+      "vulnerabilities_found": 0,
+      "timestamp": "2026-10-07T12:55:03.800363"
+    },
+    {
+      "session_id": 10,
+      "target": "http://127.0.0.1:5000",
+      "session_reward": -50.0,
+      "session_learning_score": 0.0,
+      "session_confidence": 0.0,
+      "vulnerabilities_found": 0,
+      "timestamp": "2026-10-07T13:06:30.692966"
+    },
+    {
+      "session_id": 11,
+      "target": "http://127.0.0.1:5000",
+      "session_reward": 3934.0,
+      "session_learning_score": 2.0,
+      "session_confidence": 0.6,
+      "vulnerabilities_found": 35,
+      "timestamp": "2026-10-07T14:18:28.402211"
+    },
+    {
+      "session_id": 12,
+      "target": "http://127.0.0.1:5000/",
+      "session_reward": 3938.0,
+      "session_learning_score": 2.0,
+      "session_confidence": 0.6,
+      "vulnerabilities_found": 35,
+      "timestamp": "2026-10-07T15:43:04.026814"
+    },
+    {
+      "session_id": 13,
+      "target": "http://127.0.0.1:5000/",
+      "session_reward": 3268.0,
+      "session_learning_score": 2.0,
+      "session_confidence": 0.6,
+      "vulnerabilities_found": 29,
+      "timestamp": "2026-10-07T16:59:59.268576"
+    }
+  ],
+  "created_at": "2026-10-05T18:04:42.669348",
+  "last_updated": "2026-10-07T16:59:59.268977"
+}
