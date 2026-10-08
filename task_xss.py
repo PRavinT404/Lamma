@@ -17,6 +17,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import TimeoutException, WebDriverException
 import threading
+import concurrent.futures
 from ai_core import ask_ollama
 def generate_exploits_for_target(target_info):
     if not target_info:
@@ -310,11 +311,10 @@ Respond ONLY in valid JSON:
                 pass
 
             self.chrome_driver.get(test_url)
-            time.sleep(1.5)
 
             # ── Check 1: JavaScript alert dialog (classic XSS trigger) ──
             try:
-                wait = WebDriverWait(self.chrome_driver, 5)
+                wait = WebDriverWait(self.chrome_driver, 2)
                 alert = wait.until(EC.alert_is_present())
                 alert_text = alert.text
                 alert.accept()
@@ -621,6 +621,7 @@ class IntelligentXSSAnalyzer:
         """
         all_vulns = []
         tested_jsonp_urls = set()  # avoid re-testing the same base URL for JSONP
+        tested_targets = set()     # avoid re-testing the same (url, parameter) pair
 
         for target_data in target_data_list:
             target_url = target_data.get("url")
@@ -658,28 +659,42 @@ class IntelligentXSSAnalyzer:
                 continue
 
             for param in test_params:
+                param_key = (base_key, param)
+                if param_key in tested_targets:
+                    continue
+                tested_targets.add(param_key)
                 print(f"\n[SCAN] Starting multi-vector security analysis for {target_url} parameter: {param}")
 
+                # Concurrently execute non-browser HTTP checks for this parameter
+                with concurrent.futures.ThreadPoolExecutor(max_workers=5) as executor:
+                    f_sqli = executor.submit(self.xss_engine.check_sql_injection, target_url, param)
+                    f_redir = executor.submit(self.xss_engine.check_open_redirect, target_url, param)
+                    f_hdr = executor.submit(self.xss_engine.check_header_injection, target_url, param)
+                    f_csrf = executor.submit(self.xss_engine.check_csrf_exposure, target_url, param)
+                    f_filt = executor.submit(self.xss_engine.analyze_target_filters, target_url, param)
+                    
+                    sqli_vuln = f_sqli.result()
+                    redirect_vuln = f_redir.result()
+                    header_vuln = f_hdr.result()
+                    csrf_vuln = f_csrf.result()
+                    filter_analysis = f_filt.result()
+
                 # ── Vector 1: SQL Injection Check ──
-                sqli_vuln = self.xss_engine.check_sql_injection(target_url, param)
                 if sqli_vuln:
                     print(f"[SCAN] ✅ Confirmed SQL Injection: {sqli_vuln['url']} (param: {sqli_vuln['parameter']})")
                     all_vulns.append(sqli_vuln)
 
                 # ── Vector 2: Open Redirect Check ──
-                redirect_vuln = self.xss_engine.check_open_redirect(target_url, param)
                 if redirect_vuln:
                     print(f"[SCAN] ✅ Confirmed Open Redirect: {redirect_vuln['url']} (param: {redirect_vuln['parameter']})")
                     all_vulns.append(redirect_vuln)
 
                 # ── Vector 3: HTTP Response Header Injection Check ──
-                header_vuln = self.xss_engine.check_header_injection(target_url, param)
                 if header_vuln:
                     print(f"[SCAN] ✅ Confirmed Header Injection: {header_vuln['url']} (param: {header_vuln['parameter']})")
                     all_vulns.append(header_vuln)
 
                 # ── Vector 4: Missing CSRF Protection Check ──
-                csrf_vuln = self.xss_engine.check_csrf_exposure(target_url, param)
                 if csrf_vuln and not any(v.get('url') == target_url and v.get('type') == 'CSRF_VULNERABILITY' for v in all_vulns):
                     print(f"[SCAN] ✅ Confirmed CSRF Exposure: {csrf_vuln['url']}")
                     all_vulns.append(csrf_vuln)
@@ -690,7 +705,6 @@ class IntelligentXSSAnalyzer:
                     source_code = source_response.text
                 except:
                     source_code = ""
-                filter_analysis = self.xss_engine.analyze_target_filters(target_url, param)
                 print(f"[XSS] Filter analysis complete - detected: {filter_analysis.get('detected_filters', [])}")
                 ai_payloads = self.xss_engine.get_ai_bypass_payloads(target_url, filter_analysis, source_code)
                 if not ai_payloads:
@@ -773,15 +787,20 @@ class IntelligentXSSAnalyzer:
                     script_content
                 )
                 discovered_params.extend(param_matches)
-            # Ensure DOM XSS params are always included for root pages
-            for dom_p in ['callback', 'html']:
-                if dom_p not in discovered_params:
-                    discovered_params.append(dom_p)
-            if not discovered_params:
-                discovered_params = ["q", "search", "comment", "input", "callback", "html", "jsonp"]
-        except:
-            discovered_params = ["q", "search", "comment", "input", "callback", "html"]
-        return discovered_params[:7]
+            # Ensure DOM XSS params are only added for root path
+            parsed_path = urllib.parse.urlparse(url).path
+            if parsed_path in ('/', ''):
+                for dom_p in ['callback', 'html']:
+                    if dom_p not in discovered_params:
+                        discovered_params.append(dom_p)
+            # Check URL query string parameters as well
+            parsed_query = urllib.parse.parse_qs(urllib.parse.urlparse(url).query)
+            for qp in parsed_query.keys():
+                if qp not in discovered_params:
+                    discovered_params.append(qp)
+        except Exception:
+            pass
+        return discovered_params[:5]
 
 
 def execute_xss_test(session, target_data_list):

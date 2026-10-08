@@ -1,0 +1,19 @@
+{
+  "generated_at": "2026-10-08T15:00:29.197346",
+  "target": "https://ptis.scipl.info.in/en/login",
+  "total_findings": 1,
+  "findings": [
+    {
+      "type": "OPEN_REDIRECT",
+      "parameter": "username",
+      "url": "https://ptis.scipl.info.in/login",
+      "test_url": "https://ptis.scipl.info.in/login?username=https%3A%2F%2Fexample.com%2Fpentest_verify",
+      "payload": "https://example.com/pentest_verify",
+      "technique": "unvalidated_redirect",
+      "confidence": 1.0,
+      "validation_method": "http_status_redirect",
+      "description": "Parameter username allows arbitrary external URL redirection to /en/login?username=https%3A%2F%2Fexample.com%2Fpentest_verify",
+      "logged_at": "2026-10-08T15:00:23.915464"
+    }
+  ]
+}

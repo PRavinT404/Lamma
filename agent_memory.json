@@ -1,13 +1,14 @@
 {
-  "total_sessions": 13,
-  "cumulative_learning_score": 305.725,
+  "total_sessions": 16,
+  "cumulative_learning_score": 400.625,
   "best_session_score": 2.0,
-  "total_rewards_earned": 12125.0,
-  "model_updates_count": 11,
+  "total_rewards_earned": 15921.0,
+  "model_updates_count": 14,
   "known_targets": [
     "http://127.0.0.1:5000",
     "https://ptisqa.scipl.info.in/en/login",
-    "http://127.0.0.1:5000/"
+    "http://127.0.0.1:5000/",
+    "https://ptis.scipl.info.in/en/login"
   ],
   "discovered_endpoints": [
     "/admin",
@@ -164,6 +165,13 @@
       "url": "http://127.0.0.1:5000/api/search?q=test&callback=myFunc",
       "technique": "script_tag",
       "confirmed_at": "2026-10-07T15:43:04.026719"
+    },
+    {
+      "type": "OPEN_REDIRECT",
+      "parameter": "username",
+      "url": "https://ptis.scipl.info.in/login",
+      "technique": "unvalidated_redirect",
+      "confirmed_at": "2026-10-08T15:00:29.161641"
     }
   ],
   "session_history": [
@@ -283,8 +291,35 @@
       "session_confidence": 0.6,
       "vulnerabilities_found": 29,
       "timestamp": "2026-10-07T16:59:59.268576"
+    },
+    {
+      "session_id": 14,
+      "target": "https://ptis.scipl.info.in/en/login",
+      "session_reward": 106.0,
+      "session_learning_score": 2.0,
+      "session_confidence": 0.2,
+      "vulnerabilities_found": 0,
+      "timestamp": "2026-10-07T18:26:58.522904"
+    },
+    {
+      "session_id": 15,
+      "target": "http://127.0.0.1:5000/",
+      "session_reward": 3490.0,
+      "session_learning_score": 2.0,
+      "session_confidence": 0.6,
+      "vulnerabilities_found": 31,
+      "timestamp": "2026-10-08T12:51:52.817281"
+    },
+    {
+      "session_id": 16,
+      "target": "https://ptis.scipl.info.in/en/login",
+      "session_reward": 200.0,
+      "session_learning_score": 1.88,
+      "session_confidence": 0.6,
+      "vulnerabilities_found": 1,
+      "timestamp": "2026-10-08T15:00:29.161845"
     }
   ],
   "created_at": "2026-10-05T18:04:42.669348",
-  "last_updated": "2026-10-07T16:59:59.268977"
+  "last_updated": "2026-10-08T15:00:29.161888"
 }

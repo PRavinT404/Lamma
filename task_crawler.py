@@ -31,19 +31,47 @@ class CrawlerProgressIndicator:
     def _show_progress(self):
         spinner = ["analyzing", "mapping", "discovering", "learning", "understanding", "extracting"]
         i = 0
+        last_msg = ""
         while self.active:
-            print(f"\r[{self.phase_name}] {spinner[i % len(spinner)]}... {self.message}", end="", flush=True)
-            i += 1
-            time.sleep(0.5)
+            cur_msg = self.message
+            if cur_msg != last_msg:
+                print(f"\r[{self.phase_name}] {spinner[i % len(spinner)]}... {cur_msg}               ", end="", flush=True)
+                last_msg = cur_msg
+                i += 1
+            time.sleep(0.3)
+def prune_html_for_analysis(html_content):
+    """Extract only attack-surface HTML tags (forms, inputs, scripts) to minimize prompt tokens."""
+    try:
+        soup = BeautifulSoup(html_content, 'html.parser')
+        parts = []
+        for form in soup.find_all('form'):
+            parts.append(str(form)[:600])
+        for inp in soup.find_all(['input', 'textarea', 'select']):
+            parts.append(str(inp))
+        for script in soup.find_all('script'):
+            if script.string:
+                s = script.string.strip()
+                if any(kw in s for kw in ['location', 'search', 'get', 'eval', 'innerHTML', 'setTimeout', 'param']):
+                    parts.append(s[:600])
+        if parts:
+            return "\n".join(parts)[:1800]
+    except Exception:
+        pass
+    return html_content[:1000]
+
 def intelligent_parameter_extraction(url, html_content, js_content_map):
+    pruned_html = prune_html_for_analysis(html_content)
     js_summary = ""
     for filename, content in list(js_content_map.items())[:3]:
-        js_summary += f"\n--- JS: {filename} ---\n{content[:1500]}\n"
+        # Only include relevant JS snippets containing DOM sources/sinks
+        relevant_lines = [line for line in content.splitlines() if any(kw in line for kw in ['URLSearch', 'searchParams', 'location', 'innerHTML', 'eval', 'setTimeout', 'document.write', 'get'])]
+        snippet = "\n".join(relevant_lines[:15]) if relevant_lines else content[:500]
+        js_summary += f"\n--- JS: {filename} ---\n{snippet[:800]}\n"
     prompt = f"""You are an automated web security analyzer identifying attack surfaces and XSS targets.
 Analyze this target:
 URL: {url}
 HTML:
-{html_content[:2500]}
+{pruned_html}
 JavaScript:
 {js_summary}
 
@@ -67,10 +95,20 @@ Respond in valid JSON using this exact schema:
     return ask_ollama(prompt)
 
 def deep_js_analysis(js_url, js_content):
+    # Fast heuristic check: if no source or sink keywords exist, skip LLM call entirely
+    sinks_sources = ['search', 'param', 'location', 'hash', 'query', 'url', 'innerhtml', 'eval', 'settimeout', 'document.write']
+    content_lower = js_content.lower()
+    if not any(k in content_lower for k in sinks_sources):
+        return {"vulnerability_patterns": []}
+
+    lines = js_content.splitlines()
+    relevant_lines = [l for l in lines if any(k in l.lower() for k in sinks_sources)]
+    compact_code = "\n".join(relevant_lines[:25]) if relevant_lines else js_content[:1500]
+
     prompt = f"""You are an automated security researcher detecting DOM XSS in JavaScript.
 File: {js_url}
 JavaScript Code:
-{js_content[:3000]}
+{compact_code}
 
 Task: Identify parameters read from URL/DOM sources and passed to dangerous sinks (innerHTML, eval, setTimeout, document.write, etc.).
 Respond in valid JSON using this exact schema:
@@ -87,11 +125,14 @@ Respond in valid JSON using this exact schema:
     ]
 }}"""
     return ask_ollama(prompt)
-def crawl_site(base_url, session=None, simulator_mode=False, max_urls=25, max_ai_audits=3):
+def crawl_site(base_url, session=None, simulator_mode=False, max_urls=25, max_ai_audits=2):
     progress = CrawlerProgressIndicator()
     progress.start()
     if session is None:
         session = requests.Session()
+        adapter = requests.adapters.HTTPAdapter(pool_connections=20, pool_maxsize=20)
+        session.mount("http://", adapter)
+        session.mount("https://", adapter)
         session.headers.update({'User-Agent': 'Mozilla/5.0 APEX Advanced Crawler'})
     if simulator_mode:
         progress.stop()
@@ -132,27 +173,32 @@ def crawl_site(base_url, session=None, simulator_mode=False, max_urls=25, max_ai
                 
                 cached_content = js_content_cache.get(js_url, "")
                 if cached_content:
-                    page_js_map[js_filename] = cached_content
+                    page_js_map[js_url] = cached_content
 
-            # ---------------------------------------------------------------
-            # Parallel JS analysis: analyze ALL new JS files simultaneously
-            # ---------------------------------------------------------------
-            js_to_analyze = [
-                (js_url, js_content_cache[js_url])
-                for js_url in page_js_map.keys()
-                if js_url not in js_analysis_results and js_content_cache.get(js_url)
+            # Filter out third-party/vendor/analytics scripts
+            vendor_blacklist = [
+                'jquery', 'bootstrap', 'react', 'vue', 'angular', 'lodash', 'moment',
+                'gtm', 'analytics', 'clarity', 'facebook', 'pixel', 'chunk', 'vendor',
+                'polyfill', 'webpack', 'core-js', 'cdn-cgi'
             ]
+            js_candidates = []
+            for u, content in page_js_map.items():
+                if u in js_analysis_results or not content:
+                    continue
+                filename_lower = os.path.basename(urlparse(u).path).lower()
+                u_lower = u.lower()
+                if any(v in filename_lower or v in u_lower for v in vendor_blacklist):
+                    continue
+                js_candidates.append((u, content))
 
+            # Cap to at most 2 first-party candidate scripts to avoid queue starvation
+            js_to_analyze = js_candidates[:2]
             if js_to_analyze:
-                def _analyze_js(args):
-                    u, content = args
-                    return u, deep_js_analysis(u, content)
-
-                progress.update(f"Parallel AI analysis of {len(js_to_analyze)} JS files")
-                with concurrent.futures.ThreadPoolExecutor(max_workers=AI_PARALLEL_WORKERS) as pool:
-                    for js_url, js_result in pool.map(_analyze_js, js_to_analyze):
-                        if js_result:
-                            js_analysis_results[js_url] = js_result
+                progress.update(f"AI analysis of {len(js_to_analyze)} JS files")
+                for u, content in js_to_analyze:
+                    js_result = deep_js_analysis(u, content)
+                    if js_result:
+                        js_analysis_results[u] = js_result
 
             # Inline scripts
             for script_tag in soup.find_all("script", src=False):
@@ -173,7 +219,14 @@ def crawl_site(base_url, session=None, simulator_mode=False, max_urls=25, max_ai
             has_js_handlers = bool(page_js_map)
 
             main_analysis = None
-            if (has_inputs or has_query or has_js_handlers) and ai_audits_performed < max_ai_audits:
+            # Only perform deep LLM extraction on unique pages without query strings (e.g. root or clean endpoints)
+            # Query strings (like ?callback=hello) are already accurately parsed statically by parse_qs
+            should_ai_audit = (
+                ai_audits_performed < max_ai_audits and
+                not has_query and
+                (has_inputs or has_js_handlers)
+            )
+            if should_ai_audit:
                 progress.update(f"AI analysis of {url}")
                 main_analysis = intelligent_parameter_extraction(url, html_content[:2500], page_js_map)
                 ai_audits_performed += 1
@@ -199,15 +252,21 @@ def crawl_site(base_url, session=None, simulator_mode=False, max_urls=25, max_ai
                     else:
                         discovered_targets.append(page_info)
 
-            # Map patterns from JS analysis
+            # Map patterns from JS analysis ONLY to pages that actually load this script
             for js_url, js_analysis in js_analysis_results.items():
-                if js_analysis.get("vulnerability_patterns"):
+                if js_url in page_js_map and js_analysis.get("vulnerability_patterns"):
                     for vuln_pattern in js_analysis["vulnerability_patterns"]:
+                        param_name = vuln_pattern.get('parameter')
+                        if not param_name:
+                            continue
+                        if any(t.get('url') == url and t.get('ai_analysis', {}).get('parameter') == param_name for t in discovered_targets):
+                            continue
                         page_info = {
                             'url': url,
                             'method': 'GET',
+                            'params': [param_name],
                             'ai_analysis': {
-                                'parameter': vuln_pattern.get('parameter'),
+                                'parameter': param_name,
                                 'type': f"DOM XSS via {vuln_pattern.get('sink_function')}",
                                 'source_code': vuln_pattern.get('extraction_method'),
                                 'sink_code': vuln_pattern.get('sink_function'),

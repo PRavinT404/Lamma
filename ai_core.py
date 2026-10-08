@@ -7,6 +7,7 @@ import re
 import time
 import logging
 import concurrent.futures
+import threading
 import os
 from pathlib import Path
 from requests.adapters import HTTPAdapter
@@ -38,11 +39,13 @@ logger = logging.getLogger(__name__)
 # ---------------------------------------------------------------------------
 _ollama_session = requests.Session()
 _retry = Retry(
-    total=3,
-    backoff_factor=2,
-    status_forcelist=[429, 500, 502, 503, 504],
+    total=1,
+    connect=1,
+    read=0,  # Never cascade multiple 300s retries on local Ollama read timeouts
+    status_forcelist=[429, 503],
     allowed_methods=["POST", "GET"]
 )
+_ollama_lock = threading.Lock()  # Serialize CPU inference to guarantee 100% core dedication without queuing stalls
 _adapter = HTTPAdapter(
     max_retries=_retry,
     pool_connections=AI_PARALLEL_WORKERS,
@@ -86,45 +89,96 @@ class AICore:
         except Exception as e:
             logger.error(f"Command execution failed: {e}")
             return None
-def ask_ollama(prompt, model=OLLAMA_MODEL, timeout=300):
+# In-memory prompt cache to eliminate redundant LLM calls
+_ai_cache = {}
+
+def repair_and_parse_json(raw_text):
+    """Clean markdown code fences, repair unclosed quotes/brackets, and return parsed JSON."""
+    if not raw_text:
+        return None
+    raw_text = raw_text.strip()
+    if raw_text.startswith("```json"):
+        raw_text = raw_text[7:]
+    elif raw_text.startswith("```"):
+        raw_text = raw_text[3:]
+    if raw_text.endswith("```"):
+        raw_text = raw_text[:-3]
+    raw_text = raw_text.strip()
+
+    try:
+        return json.loads(raw_text)
+    except Exception:
+        pass
+
+    # Heuristic repair for truncated tokens: balance quotes and brackets
+    cleaned = raw_text
+    if cleaned.count('"') % 2 != 0:
+        cleaned += '"'
+    open_braces = cleaned.count('{') - cleaned.count('}')
+    open_brackets = cleaned.count('[') - cleaned.count(']')
+    cleaned += ']' * max(0, open_brackets)
+    cleaned += '}' * max(0, open_braces)
+    try:
+        return json.loads(cleaned)
+    except Exception:
+        match = re.search(r'\{.*\}', raw_text, re.DOTALL)
+        if match:
+            try:
+                return json.loads(match.group(0))
+            except Exception:
+                pass
+    return None
+
+def ask_ollama(prompt, model=OLLAMA_MODEL, timeout=180):
     """Send a prompt to Ollama and return the parsed JSON response.
 
-    timeout=300s (5 min) gives the model sufficient time on any hardware.
-    keep_alive="-1" keeps the model loaded in VRAM indefinitely so there
-    is no warm-up penalty on successive calls during a pentest run.
+    - Uses all CPU cores (num_thread=8)
+    - keep_alive=-1 (integer) keeps model loaded in RAM permanently
+    - num_ctx=2048 keeps context in RAM without paging to disk
+    - num_predict=1024 prevents mid-string truncation
+    - Mutex lock serializes calls so 100% CPU is given to each request without queue stalls
+    - In-memory cache eliminates redundant calls
     """
     if not OLLAMA_AVAILABLE:
         return None
-    logger.info(f"Contacting AI model {model} (timeout={timeout}s)...")
+
+    import hashlib
+    cache_key = hashlib.md5(f"{model}:{prompt}".encode('utf-8')).hexdigest()
+    if cache_key in _ai_cache:
+        logger.info(f"AI cache hit for request (model {model})")
+        return _ai_cache[cache_key]
+
     data = {
         "model": model,
         "prompt": prompt,
         "stream": False,
         "format": "json",
-        "keep_alive": "-1",          # keep model in VRAM forever during session
+        "keep_alive": -1,
         "options": {
-            "num_thread": os.cpu_count() or 4,   # use all available CPU cores
+            "num_thread": os.cpu_count() or 8,
+            "num_ctx": 2048,
+            "num_predict": 1024,
+            "temperature": 0.2,
         }
     }
-    try:
-        response = _ollama_session.post(OLLAMA_API_URL, json=data, timeout=timeout)
-        response.raise_for_status()
-        response_json = response.json()
-        if "response" in response_json:
-            raw_text = response_json["response"].strip()
-            if raw_text.startswith("```json"):
-                raw_text = raw_text[7:]
-            elif raw_text.startswith("```"):
-                raw_text = raw_text[3:]
-            if raw_text.endswith("```"):
-                raw_text = raw_text[:-3]
-            parsed_response = json.loads(raw_text.strip())
-            if parsed_response:
-                return parsed_response
-    except requests.HTTPError as http_err:
-        logger.error(f"Ollama server returned an error: {http_err}")
-    except (requests.RequestException, json.JSONDecodeError) as e:
-        logger.error(f"AI request error: {e}")
+
+    # Acquire lock so only one prompt runs on CPU at a time
+    with _ollama_lock:
+        logger.info(f"Contacting AI model {model} (timeout={timeout}s)...")
+        try:
+            response = _ollama_session.post(OLLAMA_API_URL, json=data, timeout=timeout)
+            response.raise_for_status()
+            response_json = response.json()
+            if "response" in response_json:
+                raw_text = response_json["response"]
+                parsed_response = repair_and_parse_json(raw_text)
+                if parsed_response:
+                    _ai_cache[cache_key] = parsed_response
+                    return parsed_response
+        except requests.HTTPError as http_err:
+            logger.error(f"Ollama server returned an error: {http_err}")
+        except (requests.RequestException, json.JSONDecodeError) as e:
+            logger.error(f"AI request error: {e}")
     return None
 
 

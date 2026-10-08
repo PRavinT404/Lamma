@@ -187,9 +187,26 @@ def run_live_test(target):
         print(f"  Policy Weight Version    : Epoch #{memory.data['model_updates_count']}")
         print(f"  Model File Saved To      : {os.path.abspath(model_path)}")
         if live_env.vulnerabilities_found:
-            print("  ASSESSMENT: XSS vulnerability successfully found!")
+            print(f"  ASSESSMENT: {len(live_env.vulnerabilities_found)} vulnerabilities successfully found!")
         else:
             print("  ASSESSMENT: No vulnerabilities found in this session.")
+
+        # Generate Executive PDF Report
+        try:
+            from reporting import generate_pdf_report
+            all_discovered = list(set((discovered_dirs or []) + list(memory.data.get('discovered_endpoints', []))))
+            pdf_path = generate_pdf_report(
+                target=target,
+                vulnerabilities=live_env.vulnerabilities_found,
+                discovered_endpoints=all_discovered,
+                scan_stats={
+                    "learning_score": live_env.learning_score,
+                    "confidence_score": live_env.confidence_score,
+                    "reward": total_reward
+                }
+            )
+        except Exception as report_err:
+            print(f"[REPORT] Error generating PDF report: {report_err}")
 
     except Exception as e:
         logger.log_error("run_live_test_main_loop", e)
