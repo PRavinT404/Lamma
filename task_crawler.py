@@ -59,6 +59,66 @@ def prune_html_for_analysis(html_content):
         pass
     return html_content[:1000]
 
+def understand_website_context(base_url, html_content, soup):
+    """
+    Analyze DOM elements, forms, and page structure on first contact to deduce
+    the application's identity, primary purpose, and contextual endpoints to explore.
+    """
+    title = (soup.title.string or "").strip() if soup.title and soup.title.string else "Untitled"
+    text_sample = soup.get_text()[:2500].lower()
+
+    dom_features = []
+    has_pwd = bool(soup.find('input', {'type': 'password'}))
+    has_email = bool(soup.find('input', {'type': 'email'}))
+    has_search = bool(soup.find('input', {'type': re.compile(r'search', re.I)}) or soup.find('input', {'name': re.compile(r'search|q|query', re.I)}))
+    forms = soup.find_all('form')
+
+    if forms:
+        dom_features.append(f"{len(forms)} interactive form(s)")
+    if has_pwd:
+        dom_features.append("Password credentials field (Authentication DOM)")
+    if has_email:
+        dom_features.append("Email identity input field")
+    if has_search:
+        dom_features.append("Search query input field")
+    if soup.find_all('script'):
+        dom_features.append(f"{len(soup.find_all('script'))} script tag(s)")
+
+    # Deduce site type & purpose
+    if has_pwd or any(k in text_sample for k in ['login', 'sign in', 'authenticate', 'password', 'username']):
+        site_type = "Authentication & User Login Portal"
+        purpose = f"User authentication and access control interface for {title}"
+        contextual_candidates = [
+            "/login", "/register", "/signup", "/forgot-password", "/reset-password",
+            "/auth", "/user/profile", "/dashboard", "/account", "/admin/login"
+        ]
+    elif has_search or any(k in text_sample for k in ['search', 'catalog', 'products', 'articles', 'browse']):
+        site_type = "Search, Content & Discovery Portal"
+        purpose = f"Content discovery and search query platform for {title}"
+        contextual_candidates = [
+            "/search", "/filter", "/catalog", "/items", "/api/search", "/results", "/archive"
+        ]
+    elif any(k in text_sample for k in ['dashboard', 'admin', 'manage', 'portal', 'control panel']):
+        site_type = "Administrative & Management Dashboard"
+        purpose = f"Management control interface for {title}"
+        contextual_candidates = [
+            "/admin", "/dashboard", "/settings", "/users", "/reports", "/api/status"
+        ]
+    else:
+        site_type = "Interactive Web Application"
+        purpose = f"Interactive web service for {title}"
+        contextual_candidates = [
+            "/about", "/contact", "/api", "/status", "/search", "/login"
+        ]
+
+    return {
+        "title": title,
+        "site_type": site_type,
+        "purpose": purpose,
+        "dom_features": dom_features,
+        "contextual_candidates": contextual_candidates
+    }
+
 def intelligent_parameter_extraction(url, html_content, js_content_map):
     pruned_html = prune_html_for_analysis(html_content)
     js_summary = ""
@@ -143,6 +203,7 @@ def crawl_site(base_url, session=None, simulator_mode=False, max_urls=25, max_ai
     js_analysis_results = {}
     js_content_cache = {}
     ai_audits_performed = 0
+    website_context = None
     base_domain = urlparse(base_url).netloc
 
     while urls_to_visit and len(visited_urls) < max_urls:
@@ -155,6 +216,22 @@ def crawl_site(base_url, session=None, simulator_mode=False, max_urls=25, max_ai
             visited_urls.add(url)
             html_content = response.text
             soup = BeautifulSoup(html_content, 'html.parser')
+
+            # Initial landing page contextual analysis
+            if website_context is None:
+                website_context = understand_website_context(base_url, html_content, soup)
+                print(f"\n[SITE-INTEL] [+] Target Context: {website_context['site_type']}")
+                print(f"[SITE-INTEL] DOM Features: {', '.join(website_context['dom_features'])}")
+                print(f"[SITE-INTEL] Purpose: {website_context['purpose']}")
+                queued_count = 0
+                for candidate in website_context.get('contextual_candidates', []):
+                    candidate_url = urljoin(base_url, candidate)
+                    if candidate_url not in urls_to_visit and candidate_url not in visited_urls:
+                        urls_to_visit.append(candidate_url)
+                        queued_count += 1
+                if queued_count > 0:
+                    print(f"[SITE-INTEL] Queued {queued_count} targeted endpoints based on site context.")
+
             page_js_map = {}
 
             # Process external scripts with caching
@@ -370,5 +447,6 @@ def crawl_site(base_url, session=None, simulator_mode=False, max_urls=25, max_ai
     return {
         'pages': discovered_targets,
         'js_files': list(js_analysis_results.keys()),
-        'js_analysis': js_analysis_results
+        'js_analysis': js_analysis_results,
+        'website_context': website_context
     }

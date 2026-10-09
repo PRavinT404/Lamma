@@ -1,0 +1,43 @@
+{
+  "generated_at": "2026-10-08T15:30:50.839022",
+  "target": "https://ptis.scipl.info.in/en/",
+  "total_findings": 3,
+  "findings": [
+    {
+      "type": "OPEN_REDIRECT",
+      "parameter": "$ACTION_KEY",
+      "url": "https://ptis.scipl.info.in/en/",
+      "test_url": "https://ptis.scipl.info.in/en/?%24ACTION_KEY=https%3A%2F%2Fexample.com%2Fpentest_verify",
+      "payload": "https://example.com/pentest_verify",
+      "technique": "unvalidated_redirect",
+      "confidence": 1.0,
+      "validation_method": "http_status_redirect",
+      "description": "Parameter $ACTION_KEY allows arbitrary external URL redirection to /en?%24ACTION_KEY=https%3A%2F%2Fexample.com%2Fpentest_verify",
+      "logged_at": "2026-10-08T15:30:45.453390"
+    },
+    {
+      "type": "OPEN_REDIRECT",
+      "parameter": "$ACTION_REF_1",
+      "url": "https://ptis.scipl.info.in/en/",
+      "test_url": "https://ptis.scipl.info.in/en/?%24ACTION_REF_1=https%3A%2F%2Fexample.com%2Fpentest_verify",
+      "payload": "https://example.com/pentest_verify",
+      "technique": "unvalidated_redirect",
+      "confidence": 1.0,
+      "validation_method": "http_status_redirect",
+      "description": "Parameter $ACTION_REF_1 allows arbitrary external URL redirection to /en?%24ACTION_REF_1=https%3A%2F%2Fexample.com%2Fpentest_verify",
+      "logged_at": "2026-10-08T15:30:45.457927"
+    },
+    {
+      "type": "OPEN_REDIRECT",
+      "parameter": "locale",
+      "url": "https://ptis.scipl.info.in/en/",
+      "test_url": "https://ptis.scipl.info.in/en/?locale=https%3A%2F%2Fexample.com%2Fpentest_verify",
+      "payload": "https://example.com/pentest_verify",
+      "technique": "unvalidated_redirect",
+      "confidence": 1.0,
+      "validation_method": "http_status_redirect",
+      "description": "Parameter locale allows arbitrary external URL redirection to /en?locale=https%3A%2F%2Fexample.com%2Fpentest_verify",
+      "logged_at": "2026-10-08T15:30:45.462063"
+    }
+  ]
+}

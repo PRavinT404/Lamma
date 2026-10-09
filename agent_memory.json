@@ -1,14 +1,16 @@
 {
-  "total_sessions": 16,
-  "cumulative_learning_score": 400.625,
+  "total_sessions": 20,
+  "cumulative_learning_score": 462.025,
   "best_session_score": 2.0,
-  "total_rewards_earned": 15921.0,
-  "model_updates_count": 14,
+  "total_rewards_earned": 18377.0,
+  "model_updates_count": 18,
   "known_targets": [
     "http://127.0.0.1:5000",
     "https://ptisqa.scipl.info.in/en/login",
     "http://127.0.0.1:5000/",
-    "https://ptis.scipl.info.in/en/login"
+    "https://ptis.scipl.info.in/en/login",
+    "https://ptis.scipl.info.in/en/",
+    "https://practicetestautomation.com/practice-test-login/"
   ],
   "discovered_endpoints": [
     "/admin",
@@ -172,6 +174,90 @@
       "url": "https://ptis.scipl.info.in/login",
       "technique": "unvalidated_redirect",
       "confirmed_at": "2026-10-08T15:00:29.161641"
+    },
+    {
+      "type": "OPEN_REDIRECT",
+      "parameter": "$ACTION_KEY",
+      "url": "https://ptis.scipl.info.in/en/",
+      "technique": "unvalidated_redirect",
+      "confirmed_at": "2026-10-08T15:30:50.549493"
+    },
+    {
+      "type": "OPEN_REDIRECT",
+      "parameter": "$ACTION_REF_1",
+      "url": "https://ptis.scipl.info.in/en/",
+      "technique": "unvalidated_redirect",
+      "confirmed_at": "2026-10-08T15:30:50.549654"
+    },
+    {
+      "type": "OPEN_REDIRECT",
+      "parameter": "locale",
+      "url": "https://ptis.scipl.info.in/en/",
+      "technique": "unvalidated_redirect",
+      "confirmed_at": "2026-10-08T15:30:50.549663"
+    },
+    {
+      "type": "OPEN_REDIRECT",
+      "parameter": "$ACTION_1:1",
+      "url": "https://ptis.scipl.info.in/en/",
+      "technique": "unvalidated_redirect",
+      "confirmed_at": "2026-10-08T17:01:22.415053"
+    },
+    {
+      "type": "OPEN_REDIRECT",
+      "parameter": "$ACTION_1:0",
+      "url": "https://ptis.scipl.info.in/en/",
+      "technique": "unvalidated_redirect",
+      "confirmed_at": "2026-10-08T17:01:22.415065"
+    },
+    {
+      "type": "CSRF_VULNERABILITY",
+      "parameter": "$ACTION_REF_1",
+      "url": "https://ptis.scipl.info.in/reset-password",
+      "technique": "unprotected_get_state_change",
+      "confirmed_at": "2026-10-08T17:01:22.415076"
+    },
+    {
+      "type": "OPEN_REDIRECT",
+      "parameter": "location.hash",
+      "url": "https://practicetestautomation.com/",
+      "technique": "unvalidated_redirect",
+      "confirmed_at": "2026-10-08T19:25:36.051874"
+    },
+    {
+      "type": "OPEN_REDIRECT",
+      "parameter": "objectL10n.sliderTime",
+      "url": "https://practicetestautomation.com/",
+      "technique": "unvalidated_redirect",
+      "confirmed_at": "2026-10-08T19:25:36.052344"
+    },
+    {
+      "type": "OPEN_REDIRECT",
+      "parameter": "objectL10n.autoRotateSlider",
+      "url": "https://practicetestautomation.com/",
+      "technique": "unvalidated_redirect",
+      "confirmed_at": "2026-10-08T19:25:36.052357"
+    },
+    {
+      "type": "OPEN_REDIRECT",
+      "parameter": "location.hash",
+      "url": "https://practicetestautomation.com",
+      "technique": "unvalidated_redirect",
+      "confirmed_at": "2026-10-08T19:25:36.052363"
+    },
+    {
+      "type": "OPEN_REDIRECT",
+      "parameter": "objectL10n.sliderTime",
+      "url": "https://practicetestautomation.com",
+      "technique": "unvalidated_redirect",
+      "confirmed_at": "2026-10-08T19:25:36.052369"
+    },
+    {
+      "type": "OPEN_REDIRECT",
+      "parameter": "objectL10n.autoRotateSlider",
+      "url": "https://practicetestautomation.com",
+      "technique": "unvalidated_redirect",
+      "confirmed_at": "2026-10-08T19:25:36.052554"
     }
   ],
   "session_history": [
@@ -318,8 +404,44 @@
       "session_confidence": 0.6,
       "vulnerabilities_found": 1,
       "timestamp": "2026-10-08T15:00:29.161845"
+    },
+    {
+      "session_id": 17,
+      "target": "https://ptis.scipl.info.in/en/",
+      "session_reward": 346.0,
+      "session_learning_score": 2.0,
+      "session_confidence": 0.6,
+      "vulnerabilities_found": 3,
+      "timestamp": "2026-10-08T15:30:50.549671"
+    },
+    {
+      "session_id": 18,
+      "target": "https://ptis.scipl.info.in/en/",
+      "session_reward": 586.0,
+      "session_learning_score": 2.0,
+      "session_confidence": 0.6,
+      "vulnerabilities_found": 5,
+      "timestamp": "2026-10-08T17:01:22.415086"
+    },
+    {
+      "session_id": 19,
+      "target": "https://practicetestautomation.com/practice-test-login/",
+      "session_reward": 938.0,
+      "session_learning_score": 2.0,
+      "session_confidence": 0.6,
+      "vulnerabilities_found": 6,
+      "timestamp": "2026-10-08T19:25:36.052579"
+    },
+    {
+      "session_id": 20,
+      "target": "https://ptis.scipl.info.in/en/",
+      "session_reward": 586.0,
+      "session_learning_score": 2.0,
+      "session_confidence": 0.6,
+      "vulnerabilities_found": 5,
+      "timestamp": "2026-10-09T12:48:13.132718"
     }
   ],
   "created_at": "2026-10-05T18:04:42.669348",
-  "last_updated": "2026-10-08T15:00:29.161888"
+  "last_updated": "2026-10-09T12:48:13.132806"
 }

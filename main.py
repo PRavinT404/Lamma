@@ -203,7 +203,8 @@ def run_live_test(target):
                     "learning_score": live_env.learning_score,
                     "confidence_score": live_env.confidence_score,
                     "reward": total_reward
-                }
+                },
+                website_context=getattr(live_env, 'website_context', None)
             )
         except Exception as report_err:
             print(f"[REPORT] Error generating PDF report: {report_err}")

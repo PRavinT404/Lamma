@@ -26,7 +26,7 @@ if sys.stderr and hasattr(sys.stderr, 'reconfigure'):
         pass
 
 OLLAMA_API_URL = "http://localhost:11434/api/generate"
-OLLAMA_MODEL = "llama3.1"
+OLLAMA_MODEL = os.environ.get("OLLAMA_MODEL", "llama3.1")
 # Number of parallel AI threads — uses all logical CPU cores up to 8
 AI_PARALLEL_WORKERS = min(8, (os.cpu_count() or 4))
 
@@ -129,7 +129,7 @@ def repair_and_parse_json(raw_text):
                 pass
     return None
 
-def ask_ollama(prompt, model=OLLAMA_MODEL, timeout=180):
+def ask_ollama(prompt, model=OLLAMA_MODEL, timeout=240):
     """Send a prompt to Ollama and return the parsed JSON response.
 
     - Uses all CPU cores (num_thread=8)

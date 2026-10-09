@@ -453,3 +453,818 @@ AGENT PERSISTENT MEMORY & ACCUMULATED EXPERIENCE
 
 Loading trained model...
 [*] Found Observation-Driven model: ./models/observation_model_final.zip
+Successfully loaded: C:\Users\Pravin.Tambe\Downloads\AI-Pestest-Bot-main\AI-Pestest-Bot-main\models\observation_model_final.zip
+Starting live test with model [Observation-Driven (16-D State)]: C:\Users\Pravin.Tambe\Downloads\AI-Pestest-Bot-main\AI-Pestest-Bot-main\models\observation_model_final.zip
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+🤖 AI STEP 01/10: DISCOVERY: AI-Powered Crawling │ Progress: [░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 0.0%
+────────────────────────────────────────────────────────────────────────────────────────────────────
+Session Time: 0:00:01              │ Current Phase: DYNAMIC ANALYSIS
+Agent Intelligence:
+  Session Learning Score  : 0.000
+  Lifetime Experience     : 400.625
+  Confidence Score        : 0.000
+Queue Status: 0 targets, 0 JS files pending
+[CRAWLER] analyzing... Initializing...               [CRAWLER] mapping... Analyzing https://ptis.scipl.info.in/en/               [CRAWLER] discovering... Fetching JS 0vq~1sxzxq27l.js               [CRAWLER] learning... Fetching JS 0x.73w57rn4ou.js               [CRAWLER] understanding... Fetching JS 10k5zf9x7392w.js               [CRAWLER] extracting... Fetching JS 0c3xenwph9q2s.js               [CRAWLER] analyzing... Fetching JS 03~yq9q893hmn.js               [CRAWLER] mapping... Fetching JS 0-hrh_uw98wb_.js               [CRAWLER] discovering... AI analysis of https://ptis.scipl.info.in/en/               
+[CRAWLER-AI] Found 3 potential targets on https://ptis.scipl.info.in/en/
+[CRAWLER] learning... Analyzing https://ptis.scipl.info.in/en/login/forgot-password               [CRAWLER] understanding... Fetching JS 09p7cc3c_h7l6.js               [CRAWLER] extracting... AI analysis of https://ptis.scipl.info.in/en/login/forgot-password               
+[CRAWLER-AI] Found 3 potential targets on https://ptis.scipl.info.in/en/login/forgot-password
+[CRAWLER] analyzing... Analyzing https://ptis.scipl.info.in/en/login               
+
+[CRAWLER] Intelligent crawl complete.
+[CRAWLER] Discovered 6 potential targets
+[CRAWLER] Analyzed 2 JavaScript files
+[CRAWLER] Target 1: e -> DOM XSS
+[CRAWLER] Target 2: e -> DOM XSS
+[CRAWLER] Target 3: e -> DOM XSS
+[ENV] Crawl reward: +32.0 (6 pages found)
+
+📊 Agent State: CRAWL✅
+
+🎯 Reward: +32.0 | Total: 32.0
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+🤖 AI STEP 02/10: ATTACK: AI-Driven XSS Testing  │ Progress: [████░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 10.0%
+────────────────────────────────────────────────────────────────────────────────────────────────────
+Session Time: 0:04:11              │ Current Phase: DYNAMIC ANALYSIS
+Agent Intelligence:
+  Session Learning Score  : 0.640
+  Lifetime Experience     : 400.945
+  Confidence Score        : 0.200
+Queue Status: 6 targets, 0 JS files pending
+
+[XSS-JSONP] Checking for JSONP injection at https://ptis.scipl.info.in/_next/static/chunks/0k6c9i47ki3cm.js
+
+[SCAN] Starting multi-vector security analysis for https://ptis.scipl.info.in/_next/static/chunks/0k6c9i47ki3cm.js parameter: e
+
+[XSS-FILTER] Analyzing security controls for parameter: e
+[XSS-FILTER] Detected filter: eval_function_filter
+[XSS-FILTER] Analysis complete. Detected 1 security controls
+[XSS] Filter analysis complete - detected: ['eval_function_filter']
+
+[XSS-AI] Requesting dynamic bypass payloads from AI model for https://ptis.scipl.info.in/_next/static/chunks/0k6c9i47ki3cm.js...
+[XSS-AI] Injection context: unknown | Active filters: ['eval_function_filter']
+[XSS-AI] Received 4 dynamically generated payloads from AI model.
+[XSS_INTEL] analyzing... 0.0% - [XSS] Starting shared Chrome session for DOM-XSS validation...
+[XSS_INTEL] bypassing... 25.0% - svg_script_tag: <svg><script>alert(1)</script>...[XSS_INTEL] crafting... 25.0% - svg_script_tag: <svg><script>alert(1)</script>...[XSS_INTEL] testing... 25.0% - svg_script_tag: <svg><script>alert(1)</script>...[XSS] Chrome session ready.
+[XSS_INTEL] exploiting... 25.0% - svg_script_tag: <svg><script>alert(1)</script>...[XSS_INTEL] validating... 25.0% - svg_script_tag: <svg><script>alert(1)</script>...[XSS_INTEL] analyzing... 25.0% - svg_script_tag: <svg><script>alert(1)</script>...[XSS_INTEL] bypassing... 25.0% - svg_script_tag: <svg><script>alert(1)</script>...[XSS_INTEL] crafting... 25.0% - svg_script_tag: <svg><script>alert(1)</script>...[XSS_INTEL] testing... 25.0% - svg_script_tag: <svg><script>alert(1)</script>...[XSS_INTEL] exploiting... 50.0% - iframe_src: <iframe src=javascript:alert(1...[XSS_INTEL] validating... 50.0% - iframe_src: <iframe src=javascript:alert(1...[XSS_INTEL] analyzing... 50.0% - iframe_src: <iframe src=javascript:alert(1...[XSS_INTEL] bypassing... 50.0% - iframe_src: <iframe src=javascript:alert(1...[XSS_INTEL] crafting... 50.0% - iframe_src: <iframe src=javascript:alert(1...[XSS_INTEL] testing... 75.0% - img_onerror: <img src=x onerror=alert(1)>...[XSS_INTEL] exploiting... 75.0% - img_onerror: <img src=x onerror=alert(1)>...[XSS_INTEL] validating... 75.0% - img_onerror: <img src=x onerror=alert(1)>...[XSS_INTEL] analyzing... 75.0% - img_onerror: <img src=x onerror=alert(1)>...[XSS_INTEL] bypassing... 75.0% - img_onerror: <img src=x onerror=alert(1)>...[XSS_INTEL] crafting... 75.0% - img_onerror: <img src=x onerror=alert(1)>...[XSS_INTEL] testing... 100.0% - div_onmouseover: <div onmouseover=alert(1)>...[XSS_INTEL] exploiting... 100.0% - div_onmouseover: <div onmouseover=alert(1)>...[XSS_INTEL] validating... 100.0% - div_onmouseover: <div onmouseover=alert(1)>...[XSS_INTEL] analyzing... 100.0% - div_onmouseover: <div onmouseover=alert(1)>...[XSS_INTEL] bypassing... 100.0% - div_onmouseover: <div onmouseover=alert(1)>...
+
+[XSS-JSONP] Checking for JSONP injection at https://ptis.scipl.info.in/_next/static/chunks/0vq~1sxzxq27l.js
+
+[SCAN] Starting multi-vector security analysis for https://ptis.scipl.info.in/_next/static/chunks/0vq~1sxzxq27l.js parameter: e
+
+[XSS-FILTER] Analyzing security controls for parameter: e
+[XSS-FILTER] Detected filter: eval_function_filter
+[XSS-FILTER] Analysis complete. Detected 1 security controls
+[XSS] Filter analysis complete - detected: ['eval_function_filter']
+
+[XSS-AI] Requesting dynamic bypass payloads from AI model for https://ptis.scipl.info.in/_next/static/chunks/0vq~1sxzxq27l.js...
+[XSS-AI] Injection context: unknown | Active filters: ['eval_function_filter']
+[XSS-AI] Received 4 dynamically generated payloads from AI model.
+[XSS_INTEL] analyzing... 0.0% - [XSS_INTEL] bypassing... 25.0% - svg_script_tag: <svg><script>alert(1)</script>...[XSS_INTEL] crafting... 25.0% - svg_script_tag: <svg><script>alert(1)</script>...[XSS_INTEL] testing... 25.0% - svg_script_tag: <svg><script>alert(1)</script>...[XSS_INTEL] exploiting... 25.0% - svg_script_tag: <svg><script>alert(1)</script>...[XSS_INTEL] validating... 25.0% - svg_script_tag: <svg><script>alert(1)</script>...[XSS_INTEL] analyzing... 50.0% - img_onerror: <img src=x onerror=alert(1) st...[XSS_INTEL] bypassing... 50.0% - img_onerror: <img src=x onerror=alert(1) st...[XSS_INTEL] crafting... 50.0% - img_onerror: <img src=x onerror=alert(1) st...[XSS_INTEL] testing... 50.0% - img_onerror: <img src=x onerror=alert(1) st...[XSS_INTEL] exploiting... 50.0% - img_onerror: <img src=x onerror=alert(1) st...[XSS_INTEL] validating... 50.0% - img_onerror: <img src=x onerror=alert(1) st...[XSS_INTEL] analyzing... 75.0% - iframe_src: <iframe src=javascript:alert(1...[XSS_INTEL] bypassing... 75.0% - iframe_src: <iframe src=javascript:alert(1...[XSS_INTEL] crafting... 75.0% - iframe_src: <iframe src=javascript:alert(1...[XSS_INTEL] testing... 75.0% - iframe_src: <iframe src=javascript:alert(1...[XSS_INTEL] exploiting... 75.0% - iframe_src: <iframe src=javascript:alert(1...[XSS_INTEL] validating... 75.0% - iframe_src: <iframe src=javascript:alert(1...[XSS_INTEL] analyzing... 100.0% - object_data: <object data=javascript:alert(...[XSS_INTEL] bypassing... 100.0% - object_data: <object data=javascript:alert(...[XSS_INTEL] crafting... 100.0% - object_data: <object data=javascript:alert(...[XSS_INTEL] testing... 100.0% - object_data: <object data=javascript:alert(...[XSS_INTEL] exploiting... 100.0% - object_data: <object data=javascript:alert(...
+
+[XSS-JSONP] Checking for JSONP injection at https://ptis.scipl.info.in/_next/static/chunks/0obu87g1cptnb.js
+
+[SCAN] Starting multi-vector security analysis for https://ptis.scipl.info.in/_next/static/chunks/0obu87g1cptnb.js parameter: e
+
+[XSS-FILTER] Analyzing security controls for parameter: e
+[XSS-FILTER] Detected filter: eval_function_filter
+[XSS-FILTER] Analysis complete. Detected 1 security controls
+[XSS] Filter analysis complete - detected: ['eval_function_filter']
+
+[XSS-AI] Requesting dynamic bypass payloads from AI model for https://ptis.scipl.info.in/_next/static/chunks/0obu87g1cptnb.js...
+[XSS-AI] Injection context: unknown | Active filters: ['eval_function_filter']
+[XSS-AI] Received 4 dynamically generated payloads from AI model.
+[XSS_INTEL] analyzing... 0.0% - [XSS_INTEL] bypassing... 25.0% - svg_script_tag: <svg><script>alert(1)</script>...[XSS_INTEL] crafting... 25.0% - svg_script_tag: <svg><script>alert(1)</script>...[XSS_INTEL] testing... 25.0% - svg_script_tag: <svg><script>alert(1)</script>...[XSS_INTEL] exploiting... 25.0% - svg_script_tag: <svg><script>alert(1)</script>...[XSS_INTEL] validating... 25.0% - svg_script_tag: <svg><script>alert(1)</script>...[XSS_INTEL] analyzing... 50.0% - iframe_data_uri: <iframe src='data:text/html,<s...[XSS_INTEL] bypassing... 50.0% - iframe_data_uri: <iframe src='data:text/html,<s...[XSS_INTEL] crafting... 50.0% - iframe_data_uri: <iframe src='data:text/html,<s...[XSS_INTEL] testing... 50.0% - iframe_data_uri: <iframe src='data:text/html,<s...[XSS_INTEL] exploiting... 50.0% - iframe_data_uri: <iframe src='data:text/html,<s...[XSS_INTEL] validating... 50.0% - iframe_data_uri: <iframe src='data:text/html,<s...[XSS_INTEL] analyzing... 75.0% - event_handler_eval: <div onmouseover="eval(String....[XSS_INTEL] bypassing... 75.0% - event_handler_eval: <div onmouseover="eval(String....[XSS_INTEL] crafting... 75.0% - event_handler_eval: <div onmouseover="eval(String....[XSS_INTEL] testing... 75.0% - event_handler_eval: <div onmouseover="eval(String....[XSS_INTEL] exploiting... 75.0% - event_handler_eval: <div onmouseover="eval(String....[XSS_INTEL] validating... 100.0% - img_onerror_eval: <img src=x onerror=eval(String...[XSS_INTEL] analyzing... 100.0% - img_onerror_eval: <img src=x onerror=eval(String...[XSS_INTEL] bypassing... 100.0% - img_onerror_eval: <img src=x onerror=eval(String...[XSS_INTEL] crafting... 100.0% - img_onerror_eval: <img src=x onerror=eval(String...[XSS_INTEL] testing... 100.0% - img_onerror_eval: <img src=x onerror=eval(String...[XSS_INTEL] exploiting... 100.0% - img_onerror_eval: <img src=x onerror=eval(String...
+
+[XSS-JSONP] Checking for JSONP injection at https://ptis.scipl.info.in/en/
+
+[SCAN] Starting multi-vector security analysis for https://ptis.scipl.info.in/en/ parameter: $ACTION_KEY
+
+[XSS-FILTER] Analyzing security controls for parameter: $ACTION_KEY
+[REDIRECT] Open Redirect confirmed at https://ptis.scipl.info.in/en/?%24ACTION_KEY=https%3A%2F%2Fexample.com%2Fpentest_verify -> Location: /en?%24ACTION_KEY=https%3A%2F%2Fexample.com%2Fpentest_verify
+[XSS-FILTER] Detected filter: eval_function_filter
+[XSS-FILTER] Analysis complete. Detected 1 security controls
+[SCAN] ✅ Confirmed Open Redirect: https://ptis.scipl.info.in/en/ (param: $ACTION_KEY)
+[XSS] Filter analysis complete - detected: ['eval_function_filter']
+
+[XSS-AI] Requesting dynamic bypass payloads from AI model for https://ptis.scipl.info.in/en/...
+[XSS-AI] Injection context: unknown | Active filters: ['eval_function_filter']
+[XSS-AI] Received 4 dynamically generated payloads from AI model.
+[XSS_INTEL] analyzing... 0.0% - [XSS_INTEL] bypassing... 25.0% - svg_script_tag: <svg><script>alert(1)</script>...[XSS_INTEL] crafting... 25.0% - svg_script_tag: <svg><script>alert(1)</script>...[XSS_INTEL] testing... 25.0% - svg_script_tag: <svg><script>alert(1)</script>...[XSS_INTEL] exploiting... 25.0% - svg_script_tag: <svg><script>alert(1)</script>...[XSS_INTEL] validating... 25.0% - svg_script_tag: <svg><script>alert(1)</script>...[XSS_INTEL] analyzing... 25.0% - svg_script_tag: <svg><script>alert(1)</script>...[XSS_INTEL] bypassing... 25.0% - svg_script_tag: <svg><script>alert(1)</script>...[XSS_INTEL] crafting... 25.0% - svg_script_tag: <svg><script>alert(1)</script>...[XSS_INTEL] testing... 50.0% - iframe_src: <iframe src='javascript:alert(...[XSS_INTEL] exploiting... 50.0% - iframe_src: <iframe src='javascript:alert(...[XSS_INTEL] validating... 50.0% - iframe_src: <iframe src='javascript:alert(...[XSS_INTEL] analyzing... 50.0% - iframe_src: <iframe src='javascript:alert(...[XSS_INTEL] bypassing... 50.0% - iframe_src: <iframe src='javascript:alert(...[XSS_INTEL] crafting... 50.0% - iframe_src: <iframe src='javascript:alert(...[XSS_INTEL] testing... 50.0% - iframe_src: <iframe src='javascript:alert(...[XSS_INTEL] exploiting... 75.0% - anchor_href: <a href='javascript:alert(1)'>...[XSS_INTEL] validating... 75.0% - anchor_href: <a href='javascript:alert(1)'>...[XSS_INTEL] analyzing... 75.0% - anchor_href: <a href='javascript:alert(1)'>...[XSS_INTEL] bypassing... 75.0% - anchor_href: <a href='javascript:alert(1)'>...[XSS_INTEL] crafting... 75.0% - anchor_href: <a href='javascript:alert(1)'>...[XSS_INTEL] testing... 75.0% - anchor_href: <a href='javascript:alert(1)'>...[XSS_INTEL] exploiting... 75.0% - anchor_href: <a href='javascript:alert(1)'>...[XSS_INTEL] validating... 100.0% - div_onmouseover: <div onmouseover='alert(1)'>...[XSS_INTEL] analyzing... 100.0% - div_onmouseover: <div onmouseover='alert(1)'>...[XSS_INTEL] bypassing... 100.0% - div_onmouseover: <div onmouseover='alert(1)'>...[XSS_INTEL] crafting... 100.0% - div_onmouseover: <div onmouseover='alert(1)'>...[XSS_INTEL] testing... 100.0% - div_onmouseover: <div onmouseover='alert(1)'>...[XSS_INTEL] exploiting... 100.0% - div_onmouseover: <div onmouseover='alert(1)'>...[XSS_INTEL] validating... 100.0% - div_onmouseover: <div onmouseover='alert(1)'>...
+
+[SCAN] Starting multi-vector security analysis for https://ptis.scipl.info.in/en/ parameter: $ACTION_REF_1
+
+[XSS-FILTER] Analyzing security controls for parameter: $ACTION_REF_1
+[REDIRECT] Open Redirect confirmed at https://ptis.scipl.info.in/en/?%24ACTION_REF_1=https%3A%2F%2Fexample.com%2Fpentest_verify -> Location: /en?%24ACTION_REF_1=https%3A%2F%2Fexample.com%2Fpentest_verify
+[XSS-FILTER] Detected filter: eval_function_filter
+[XSS-FILTER] Analysis complete. Detected 1 security controls
+[SCAN] ✅ Confirmed Open Redirect: https://ptis.scipl.info.in/en/ (param: $ACTION_REF_1)
+[XSS] Filter analysis complete - detected: ['eval_function_filter']
+
+[XSS-AI] Requesting dynamic bypass payloads from AI model for https://ptis.scipl.info.in/en/...
+[XSS-AI] Injection context: unknown | Active filters: ['eval_function_filter']
+[XSS-AI] Received 4 dynamically generated payloads from AI model.
+[XSS_INTEL] analyzing... 0.0% - [XSS_INTEL] bypassing... 25.0% - svg_script_tag: <svg><script>alert(1)</script>...[XSS_INTEL] crafting... 25.0% - svg_script_tag: <svg><script>alert(1)</script>...[XSS_INTEL] testing... 25.0% - svg_script_tag: <svg><script>alert(1)</script>...[XSS_INTEL] exploiting... 25.0% - svg_script_tag: <svg><script>alert(1)</script>...[XSS_INTEL] validating... 25.0% - svg_script_tag: <svg><script>alert(1)</script>...[XSS_INTEL] analyzing... 25.0% - svg_script_tag: <svg><script>alert(1)</script>...[XSS_INTEL] bypassing... 50.0% - iframe_src: <iframe src='javascript:alert(...[XSS_INTEL] crafting... 50.0% - iframe_src: <iframe src='javascript:alert(...[XSS_INTEL] testing... 50.0% - iframe_src: <iframe src='javascript:alert(...[XSS_INTEL] exploiting... 50.0% - iframe_src: <iframe src='javascript:alert(...[XSS_INTEL] validating... 50.0% - iframe_src: <iframe src='javascript:alert(...[XSS_INTEL] analyzing... 50.0% - iframe_src: <iframe src='javascript:alert(...[XSS_INTEL] bypassing... 50.0% - iframe_src: <iframe src='javascript:alert(...[XSS_INTEL] crafting... 75.0% - anchor_href: <a href='javascript:alert(1)'>...[XSS_INTEL] testing... 75.0% - anchor_href: <a href='javascript:alert(1)'>...[XSS_INTEL] exploiting... 75.0% - anchor_href: <a href='javascript:alert(1)'>...[XSS_INTEL] validating... 75.0% - anchor_href: <a href='javascript:alert(1)'>...[XSS_INTEL] analyzing... 75.0% - anchor_href: <a href='javascript:alert(1)'>...[XSS_INTEL] bypassing... 75.0% - anchor_href: <a href='javascript:alert(1)'>...[XSS_INTEL] crafting... 75.0% - anchor_href: <a href='javascript:alert(1)'>...[XSS_INTEL] testing... 100.0% - div_onmouseover: <div onmouseover='alert(1)'>...[XSS_INTEL] exploiting... 100.0% - div_onmouseover: <div onmouseover='alert(1)'>...[XSS_INTEL] validating... 100.0% - div_onmouseover: <div onmouseover='alert(1)'>...[XSS_INTEL] analyzing... 100.0% - div_onmouseover: <div onmouseover='alert(1)'>...[XSS_INTEL] bypassing... 100.0% - div_onmouseover: <div onmouseover='alert(1)'>...[XSS_INTEL] crafting... 100.0% - div_onmouseover: <div onmouseover='alert(1)'>...[XSS_INTEL] testing... 100.0% - div_onmouseover: <div onmouseover='alert(1)'>...
+
+[SCAN] Starting multi-vector security analysis for https://ptis.scipl.info.in/en/ parameter: locale
+
+[XSS-FILTER] Analyzing security controls for parameter: locale
+[REDIRECT] Open Redirect confirmed at https://ptis.scipl.info.in/en/?locale=https%3A%2F%2Fexample.com%2Fpentest_verify -> Location: /en?locale=https%3A%2F%2Fexample.com%2Fpentest_verify
+[XSS-FILTER] Detected filter: eval_function_filter
+[XSS-FILTER] Analysis complete. Detected 1 security controls
+[SCAN] ✅ Confirmed Open Redirect: https://ptis.scipl.info.in/en/ (param: locale)
+[XSS] Filter analysis complete - detected: ['eval_function_filter']
+
+[XSS-AI] Requesting dynamic bypass payloads from AI model for https://ptis.scipl.info.in/en/...
+[XSS-AI] Injection context: unknown | Active filters: ['eval_function_filter']
+[XSS-AI] Received 4 dynamically generated payloads from AI model.
+[XSS_INTEL] analyzing... 0.0% - [XSS_INTEL] bypassing... 25.0% - svg_script_tag: <svg><script>alert(1)</script>...[XSS_INTEL] crafting... 25.0% - svg_script_tag: <svg><script>alert(1)</script>...[XSS_INTEL] testing... 25.0% - svg_script_tag: <svg><script>alert(1)</script>...[XSS_INTEL] exploiting... 25.0% - svg_script_tag: <svg><script>alert(1)</script>...[XSS_INTEL] validating... 25.0% - svg_script_tag: <svg><script>alert(1)</script>...[XSS_INTEL] analyzing... 25.0% - svg_script_tag: <svg><script>alert(1)</script>...[XSS_INTEL] bypassing... 50.0% - iframe_src: <iframe src='javascript:alert(...[XSS_INTEL] crafting... 50.0% - iframe_src: <iframe src='javascript:alert(...[XSS_INTEL] testing... 50.0% - iframe_src: <iframe src='javascript:alert(...[XSS_INTEL] exploiting... 50.0% - iframe_src: <iframe src='javascript:alert(...[XSS_INTEL] validating... 50.0% - iframe_src: <iframe src='javascript:alert(...[XSS_INTEL] analyzing... 50.0% - iframe_src: <iframe src='javascript:alert(...[XSS_INTEL] bypassing... 50.0% - iframe_src: <iframe src='javascript:alert(...[XSS_INTEL] crafting... 50.0% - iframe_src: <iframe src='javascript:alert(...[XSS_INTEL] testing... 75.0% - anchor_href: <a href='javascript:alert(1)'>...[XSS_INTEL] exploiting... 75.0% - anchor_href: <a href='javascript:alert(1)'>...[XSS_INTEL] validating... 75.0% - anchor_href: <a href='javascript:alert(1)'>...[XSS_INTEL] analyzing... 75.0% - anchor_href: <a href='javascript:alert(1)'>...[XSS_INTEL] bypassing... 75.0% - anchor_href: <a href='javascript:alert(1)'>...[XSS_INTEL] crafting... 75.0% - anchor_href: <a href='javascript:alert(1)'>...[XSS_INTEL] testing... 100.0% - div_onmouseover: <div onmouseover='alert(1)'>...[XSS_INTEL] exploiting... 100.0% - div_onmouseover: <div onmouseover='alert(1)'>...[XSS_INTEL] validating... 100.0% - div_onmouseover: <div onmouseover='alert(1)'>...[XSS_INTEL] analyzing... 100.0% - div_onmouseover: <div onmouseover='alert(1)'>...[XSS_INTEL] bypassing... 100.0% - div_onmouseover: <div onmouseover='alert(1)'>...[XSS_INTEL] crafting... 100.0% - div_onmouseover: <div onmouseover='alert(1)'>...[XSS_INTEL] testing... 100.0% - div_onmouseover: <div onmouseover='alert(1)'>...
+
+[XSS-JSONP] Checking for JSONP injection at https://ptis.scipl.info.in/en/login/forgot-password
+
+[SCAN] Starting multi-vector security analysis for https://ptis.scipl.info.in/en/login/forgot-password parameter: email
+
+[XSS-FILTER] Analyzing security controls for parameter: email
+[XSS-FILTER] Detected filter: eval_function_filter
+[XSS-FILTER] Analysis complete. Detected 1 security controls
+[XSS] Filter analysis complete - detected: ['eval_function_filter']
+
+[XSS-AI] Requesting dynamic bypass payloads from AI model for https://ptis.scipl.info.in/en/login/forgot-password...
+[XSS-AI] Injection context: unknown | Active filters: ['eval_function_filter']
+[XSS-AI] Received 4 dynamically generated payloads from AI model.
+[XSS_INTEL] analyzing... 0.0% - [XSS_INTEL] bypassing... 25.0% - svg_script_tag: <svg><script>alert(1)</script>...[XSS_INTEL] crafting... 25.0% - svg_script_tag: <svg><script>alert(1)</script>...[XSS_INTEL] testing... 25.0% - svg_script_tag: <svg><script>alert(1)</script>...[XSS_INTEL] exploiting... 25.0% - svg_script_tag: <svg><script>alert(1)</script>...[XSS_INTEL] validating... 25.0% - svg_script_tag: <svg><script>alert(1)</script>...[XSS_INTEL] analyzing... 25.0% - svg_script_tag: <svg><script>alert(1)</script>...[XSS_INTEL] bypassing... 50.0% - iframe_data_uri: <iframe src='data:text/html,<s...[XSS_INTEL] crafting... 50.0% - iframe_data_uri: <iframe src='data:text/html,<s...[XSS_INTEL] testing... 50.0% - iframe_data_uri: <iframe src='data:text/html,<s...[XSS_INTEL] exploiting... 50.0% - iframe_data_uri: <iframe src='data:text/html,<s...[XSS_INTEL] validating... 50.0% - iframe_data_uri: <iframe src='data:text/html,<s...[XSS_INTEL] analyzing... 50.0% - iframe_data_uri: <iframe src='data:text/html,<s...[XSS_INTEL] bypassing... 50.0% - iframe_data_uri: <iframe src='data:text/html,<s...[XSS_INTEL] crafting... 75.0% - img_onerror: <img src=x onerror=alert(1)>...[XSS_INTEL] testing... 75.0% - img_onerror: <img src=x onerror=alert(1)>...[XSS_INTEL] exploiting... 75.0% - img_onerror: <img src=x onerror=alert(1)>...[XSS_INTEL] validating... 75.0% - img_onerror: <img src=x onerror=alert(1)>...[XSS_INTEL] analyzing... 75.0% - img_onerror: <img src=x onerror=alert(1)>...[XSS_INTEL] bypassing... 75.0% - img_onerror: <img src=x onerror=alert(1)>...[XSS_INTEL] crafting... 100.0% - onmouseover: <div onmouseover=alert(1)>...[XSS_INTEL] testing... 100.0% - onmouseover: <div onmouseover=alert(1)>...[XSS_INTEL] exploiting... 100.0% - onmouseover: <div onmouseover=alert(1)>...[XSS_INTEL] validating... 100.0% - onmouseover: <div onmouseover=alert(1)>...[XSS_INTEL] analyzing... 100.0% - onmouseover: <div onmouseover=alert(1)>...[XSS_INTEL] bypassing... 100.0% - onmouseover: <div onmouseover=alert(1)>...
+
+[XSS-JSONP] Checking for JSONP injection at https://ptis.scipl.info.in/en/login
+
+[SCAN] Starting multi-vector security analysis for https://ptis.scipl.info.in/en/login parameter: $ACTION_KEY
+
+[XSS-FILTER] Analyzing security controls for parameter: $ACTION_KEY
+[XSS-FILTER] Detected filter: eval_function_filter
+[XSS-FILTER] Analysis complete. Detected 1 security controls
+[XSS] Filter analysis complete - detected: ['eval_function_filter']
+
+[XSS-AI] Requesting dynamic bypass payloads from AI model for https://ptis.scipl.info.in/en/login...
+[XSS-AI] Injection context: unknown | Active filters: ['eval_function_filter']
+[XSS-AI] Received 4 dynamically generated payloads from AI model.
+[XSS_INTEL] analyzing... 0.0% - [XSS_INTEL] bypassing... 25.0% - script_tag: <script>alert(1)</script>...[XSS_INTEL] crafting... 25.0% - script_tag: <script>alert(1)</script>...[XSS_INTEL] testing... 25.0% - script_tag: <script>alert(1)</script>...[XSS_INTEL] exploiting... 25.0% - script_tag: <script>alert(1)</script>...[XSS_INTEL] validating... 25.0% - script_tag: <script>alert(1)</script>...[XSS_INTEL] analyzing... 25.0% - script_tag: <script>alert(1)</script>...[XSS_INTEL] bypassing... 50.0% - img_onerror: <img src=x onerror=alert(1)>...[XSS_INTEL] crafting... 50.0% - img_onerror: <img src=x onerror=alert(1)>...[XSS_INTEL] testing... 50.0% - img_onerror: <img src=x onerror=alert(1)>...[XSS_INTEL] exploiting... 50.0% - img_onerror: <img src=x onerror=alert(1)>...[XSS_INTEL] validating... 50.0% - img_onerror: <img src=x onerror=alert(1)>...[XSS_INTEL] analyzing... 50.0% - img_onerror: <img src=x onerror=alert(1)>...[XSS_INTEL] bypassing... 50.0% - img_onerror: <img src=x onerror=alert(1)>...[XSS_INTEL] crafting... 75.0% - svg_injection: '><svg><script>alert(1)</scrip...[XSS_INTEL] testing... 75.0% - svg_injection: '><svg><script>alert(1)</scrip...[XSS_INTEL] exploiting... 75.0% - svg_injection: '><svg><script>alert(1)</scrip...[XSS_INTEL] validating... 75.0% - svg_injection: '><svg><script>alert(1)</scrip...[XSS_INTEL] analyzing... 75.0% - svg_injection: '><svg><script>alert(1)</scrip...[XSS_INTEL] bypassing... 75.0% - svg_injection: '><svg><script>alert(1)</scrip...[XSS_INTEL] crafting... 100.0% - iframe_src: <iframe src=javascript:alert(1...[XSS_INTEL] testing... 100.0% - iframe_src: <iframe src=javascript:alert(1...[XSS_INTEL] exploiting... 100.0% - iframe_src: <iframe src=javascript:alert(1...[XSS_INTEL] validating... 100.0% - iframe_src: <iframe src=javascript:alert(1...[XSS_INTEL] analyzing... 100.0% - iframe_src: <iframe src=javascript:alert(1...[XSS_INTEL] bypassing... 100.0% - iframe_src: <iframe src=javascript:alert(1...[XSS_INTEL] crafting... 100.0% - iframe_src: <iframe src=javascript:alert(1...
+
+[SCAN] Starting multi-vector security analysis for https://ptis.scipl.info.in/en/login parameter: $ACTION_REF_1
+
+[XSS-FILTER] Analyzing security controls for parameter: $ACTION_REF_1
+[XSS-FILTER] Detected filter: eval_function_filter
+[XSS-FILTER] Analysis complete. Detected 1 security controls
+[XSS] Filter analysis complete - detected: ['eval_function_filter']
+
+[XSS-AI] Requesting dynamic bypass payloads from AI model for https://ptis.scipl.info.in/en/login...
+[XSS-AI] Injection context: unknown | Active filters: ['eval_function_filter']
+[XSS-AI] Received 4 dynamically generated payloads from AI model.
+[XSS_INTEL] analyzing... 0.0% - [XSS_INTEL] bypassing... 25.0% - script_tag: <script>alert(1)</script>...[XSS_INTEL] crafting... 25.0% - script_tag: <script>alert(1)</script>...[XSS_INTEL] testing... 25.0% - script_tag: <script>alert(1)</script>...[XSS_INTEL] exploiting... 25.0% - script_tag: <script>alert(1)</script>...[XSS_INTEL] validating... 25.0% - script_tag: <script>alert(1)</script>...[XSS_INTEL] analyzing... 25.0% - script_tag: <script>alert(1)</script>...[XSS_INTEL] bypassing... 25.0% - script_tag: <script>alert(1)</script>...[XSS_INTEL] crafting... 50.0% - img_onerror: <img src=x onerror=alert(1)>...[XSS_INTEL] testing... 50.0% - img_onerror: <img src=x onerror=alert(1)>...[XSS_INTEL] exploiting... 50.0% - img_onerror: <img src=x onerror=alert(1)>...[XSS_INTEL] validating... 50.0% - img_onerror: <img src=x onerror=alert(1)>...[XSS_INTEL] analyzing... 50.0% - img_onerror: <img src=x onerror=alert(1)>...[XSS_INTEL] bypassing... 50.0% - img_onerror: <img src=x onerror=alert(1)>...[XSS_INTEL] crafting... 75.0% - svg_injection: '><svg><script>alert(1)</scrip...[XSS_INTEL] testing... 75.0% - svg_injection: '><svg><script>alert(1)</scrip...[XSS_INTEL] exploiting... 75.0% - svg_injection: '><svg><script>alert(1)</scrip...[XSS_INTEL] validating... 75.0% - svg_injection: '><svg><script>alert(1)</scrip...[XSS_INTEL] analyzing... 75.0% - svg_injection: '><svg><script>alert(1)</scrip...[XSS_INTEL] bypassing... 75.0% - svg_injection: '><svg><script>alert(1)</scrip...[XSS_INTEL] crafting... 75.0% - svg_injection: '><svg><script>alert(1)</scrip...[XSS_INTEL] testing... 100.0% - iframe_src: <iframe src=javascript:alert(1...[XSS_INTEL] exploiting... 100.0% - iframe_src: <iframe src=javascript:alert(1...[XSS_INTEL] validating... 100.0% - iframe_src: <iframe src=javascript:alert(1...[XSS_INTEL] analyzing... 100.0% - iframe_src: <iframe src=javascript:alert(1...[XSS_INTEL] bypassing... 100.0% - iframe_src: <iframe src=javascript:alert(1...[XSS_INTEL] crafting... 100.0% - iframe_src: <iframe src=javascript:alert(1...[XSS_INTEL] testing... 100.0% - iframe_src: <iframe src=javascript:alert(1...
+
+[SCAN] Starting multi-vector security analysis for https://ptis.scipl.info.in/en/login parameter: locale
+
+[XSS-FILTER] Analyzing security controls for parameter: locale
+[XSS-FILTER] Detected filter: eval_function_filter
+[XSS-FILTER] Analysis complete. Detected 1 security controls
+[XSS] Filter analysis complete - detected: ['eval_function_filter']
+
+[XSS-AI] Requesting dynamic bypass payloads from AI model for https://ptis.scipl.info.in/en/login...
+[XSS-AI] Injection context: unknown | Active filters: ['eval_function_filter']
+[XSS-AI] Received 4 dynamically generated payloads from AI model.
+[XSS_INTEL] analyzing... 0.0% - [XSS_INTEL] bypassing... 25.0% - script_tag: <script>alert(1)</script>...[XSS_INTEL] crafting... 25.0% - script_tag: <script>alert(1)</script>...[XSS_INTEL] testing... 25.0% - script_tag: <script>alert(1)</script>...[XSS_INTEL] exploiting... 25.0% - script_tag: <script>alert(1)</script>...[XSS_INTEL] validating... 25.0% - script_tag: <script>alert(1)</script>...[XSS_INTEL] analyzing... 25.0% - script_tag: <script>alert(1)</script>...[XSS_INTEL] bypassing... 50.0% - img_onerror: <img src=x onerror=alert(1)>...[XSS_INTEL] crafting... 50.0% - img_onerror: <img src=x onerror=alert(1)>...[XSS_INTEL] testing... 50.0% - img_onerror: <img src=x onerror=alert(1)>...[XSS_INTEL] exploiting... 50.0% - img_onerror: <img src=x onerror=alert(1)>...[XSS_INTEL] validating... 50.0% - img_onerror: <img src=x onerror=alert(1)>...[XSS_INTEL] analyzing... 50.0% - img_onerror: <img src=x onerror=alert(1)>...[XSS_INTEL] bypassing... 75.0% - svg_injection: '><svg><script>alert(1)</scrip...[XSS_INTEL] crafting... 75.0% - svg_injection: '><svg><script>alert(1)</scrip...[XSS_INTEL] testing... 75.0% - svg_injection: '><svg><script>alert(1)</scrip...[XSS_INTEL] exploiting... 75.0% - svg_injection: '><svg><script>alert(1)</scrip...[XSS_INTEL] validating... 75.0% - svg_injection: '><svg><script>alert(1)</scrip...[XSS_INTEL] analyzing... 75.0% - svg_injection: '><svg><script>alert(1)</scrip...[XSS_INTEL] bypassing... 75.0% - svg_injection: '><svg><script>alert(1)</scrip...[XSS_INTEL] crafting... 100.0% - iframe_src: <iframe src=javascript:alert(1...[XSS_INTEL] testing... 100.0% - iframe_src: <iframe src=javascript:alert(1...[XSS_INTEL] exploiting... 100.0% - iframe_src: <iframe src=javascript:alert(1...[XSS_INTEL] validating... 100.0% - iframe_src: <iframe src=javascript:alert(1...[XSS_INTEL] analyzing... 100.0% - iframe_src: <iframe src=javascript:alert(1...[XSS_INTEL] bypassing... 100.0% - iframe_src: <iframe src=javascript:alert(1...
+
+[XSS] ══ SCAN COMPLETE: 3 vulnerability(s) found ══
+  [1] OPEN_REDIRECT | https://ptis.scipl.info.in/en/ | param=$ACTION_KEY | confidence=100%
+  [2] OPEN_REDIRECT | https://ptis.scipl.info.in/en/ | param=$ACTION_REF_1 | confidence=100%
+  [3] OPEN_REDIRECT | https://ptis.scipl.info.in/en/ | param=locale | confidence=100%
+[ENV] 3 vulnerability(s) found! Reward: +300.0
+  └─ [OPEN_REDIRECT] https://ptis.scipl.info.in/en/ param=$ACTION_KEY confidence=100%
+  └─ [OPEN_REDIRECT] https://ptis.scipl.info.in/en/ param=$ACTION_REF_1 confidence=100%
+  └─ [OPEN_REDIRECT] https://ptis.scipl.info.in/en/ param=locale confidence=100%
+
+📊 Agent State: CRAWL✅ | XSS🚨
+
+🎯 Reward: +300.0 | Total: 332.0
+
+🚨🚨🚨 VULNERABILITY DETECTED! 🚨🚨🚨
+┌──────────────────────────────────────────────────────────────────────────────────────────────────┐
+│ Type: OPEN_REDIRECT                                                                            │
+│ Parameter: $ACTION_KEY                                                                         │
+│ Confidence: 100%                                                                               │
+│ Payload: https://example.com/pentest_verify                                                    │
+└──────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+🚨🚨🚨 VULNERABILITY DETECTED! 🚨🚨🚨
+┌──────────────────────────────────────────────────────────────────────────────────────────────────┐
+│ Type: OPEN_REDIRECT                                                                            │
+│ Parameter: $ACTION_REF_1                                                                       │
+│ Confidence: 100%                                                                               │
+│ Payload: https://example.com/pentest_verify                                                    │
+└──────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+🚨🚨🚨 VULNERABILITY DETECTED! 🚨🚨🚨
+┌──────────────────────────────────────────────────────────────────────────────────────────────────┐
+│ Type: OPEN_REDIRECT                                                                            │
+│ Parameter: locale                                                                              │
+│ Confidence: 100%                                                                               │
+│ Payload: https://example.com/pentest_verify                                                    │
+└──────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+🤖 AI STEP 03/10: ATTACK: AI-Driven XSS Testing  │ Progress: [████████░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 20.0%
+────────────────────────────────────────────────────────────────────────────────────────────────────
+Session Time: 0:09:01              │ Current Phase: DYNAMIC ANALYSIS
+Agent Intelligence:
+  Session Learning Score  : 2.000
+  Lifetime Experience     : 401.625
+  Confidence Score        : 0.600
+Queue Status: 0 targets, 0 JS files pending
+[ENV] XSS called with empty queue, penalty -2.0
+
+📊 Agent State: CRAWL✅ | XSS🚨
+
+🎯 Reward: -2.0 | Total: 330.0
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+🤖 AI STEP 04/10: ATTACK: AI-Driven XSS Testing  │ Progress: [████████████░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 30.0%
+────────────────────────────────────────────────────────────────────────────────────────────────────
+Session Time: 0:09:02              │ Current Phase: DYNAMIC ANALYSIS
+Agent Intelligence:
+  Session Learning Score  : 1.960
+  Lifetime Experience     : 401.605
+  Confidence Score        : 0.600
+Queue Status: 0 targets, 0 JS files pending
+[ENV] XSS called with empty queue, penalty -2.0
+
+📊 Agent State: CRAWL✅ | XSS🚨
+
+🎯 Reward: -2.0 | Total: 328.0
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+🤖 AI STEP 05/10: ATTACK: AI-Driven XSS Testing  │ Progress: [████████████████░░░░░░░░░░░░░░░░░░░░░░░░] 40.0%
+────────────────────────────────────────────────────────────────────────────────────────────────────
+Session Time: 0:09:02              │ Current Phase: DYNAMIC ANALYSIS
+Agent Intelligence:
+  Session Learning Score  : 1.920
+  Lifetime Experience     : 401.585
+  Confidence Score        : 0.600
+Queue Status: 0 targets, 0 JS files pending
+[ENV] XSS called with empty queue, penalty -2.0
+
+📊 Agent State: CRAWL✅ | XSS🚨
+
+🎯 Reward: -2.0 | Total: 326.0
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+🤖 AI STEP 06/10: ATTACK: AI-Driven XSS Testing  │ Progress: [████████████████████░░░░░░░░░░░░░░░░░░░░] 50.0%
+────────────────────────────────────────────────────────────────────────────────────────────────────
+Session Time: 0:09:03              │ Current Phase: DYNAMIC ANALYSIS
+Agent Intelligence:
+  Session Learning Score  : 1.880
+  Lifetime Experience     : 401.565
+  Confidence Score        : 0.600
+Queue Status: 0 targets, 0 JS files pending
+[ENV] XSS called with empty queue, penalty -2.0
+
+📊 Agent State: CRAWL✅ | XSS🚨
+
+🎯 Reward: -2.0 | Total: 324.0
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+🤖 AI STEP 07/10: ATTACK: AI-Driven XSS Testing  │ Progress: [████████████████████████░░░░░░░░░░░░░░░░] 60.0%
+────────────────────────────────────────────────────────────────────────────────────────────────────
+Session Time: 0:09:03              │ Current Phase: DYNAMIC ANALYSIS
+Agent Intelligence:
+  Session Learning Score  : 1.840
+  Lifetime Experience     : 401.545
+  Confidence Score        : 0.600
+Queue Status: 0 targets, 0 JS files pending
+[ENV] XSS called with empty queue, penalty -2.0
+
+📊 Agent State: CRAWL✅ | XSS🚨
+
+🎯 Reward: -2.0 | Total: 322.0
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+🤖 AI STEP 08/10: ATTACK: AI-Driven XSS Testing  │ Progress: [████████████████████████████░░░░░░░░░░░░] 70.0%
+────────────────────────────────────────────────────────────────────────────────────────────────────
+Session Time: 0:09:04              │ Current Phase: DYNAMIC ANALYSIS
+Agent Intelligence:
+  Session Learning Score  : 1.800
+  Lifetime Experience     : 401.525
+  Confidence Score        : 0.600
+Queue Status: 0 targets, 0 JS files pending
+[ENV] XSS called with empty queue, penalty -2.0
+
+📊 Agent State: CRAWL✅ | XSS🚨
+
+🎯 Reward: -2.0 | Total: 320.0
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+🤖 AI STEP 09/10: ATTACK: AI-Driven XSS Testing  │ Progress: [████████████████████████████████░░░░░░░░] 80.0%
+────────────────────────────────────────────────────────────────────────────────────────────────────
+Session Time: 0:09:04              │ Current Phase: DYNAMIC ANALYSIS
+Agent Intelligence:
+  Session Learning Score  : 1.760
+  Lifetime Experience     : 401.505
+  Confidence Score        : 0.600
+Queue Status: 0 targets, 0 JS files pending
+[ENV] XSS called with empty queue, penalty -2.0
+
+📊 Agent State: CRAWL✅ | XSS🚨
+
+🎯 Reward: -2.0 | Total: 318.0
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+🤖 AI STEP 10/10: ATTACK: AI-Driven XSS Testing  │ Progress: [████████████████████████████████████░░░░] 90.0%
+────────────────────────────────────────────────────────────────────────────────────────────────────
+Session Time: 0:09:05              │ Current Phase: DYNAMIC ANALYSIS
+Agent Intelligence:
+  Session Learning Score  : 1.720
+  Lifetime Experience     : 401.485
+  Confidence Score        : 0.600
+Queue Status: 0 targets, 0 JS files pending
+[ENV] XSS called with empty queue, penalty -2.0
+[ENV] Episode complete bonus: +30.0 (3 vulns found)
+
+📊 Agent State: CRAWL✅ | XSS🚨
+
+🎯 Reward: +28.0 | Total: 346.0
+
+================================================================================
+🧠 CONTINUOUS LEARNING: UPDATING NEURAL POLICY & PERSISTENT MEMORY
+================================================================================
+[*] Performing incremental policy optimization step from live experience...
+[*] ✅ Model weights successfully fine-tuned & saved to: C:\Users\Pravin.Tambe\Downloads\AI-Pestest-Bot-main\AI-Pestest-Bot-main\models\observation_model_final.zip
+[MEMORY] ✅ Persistent memory successfully saved -> C:\Users\Pravin.Tambe\Downloads\AI-Pestest-Bot-main\AI-Pestest-Bot-main\agent_memory.json
+
+====================================================================================================
+                                  AI PENTESTING AGENT FINAL REPORT                                  
+====================================================================================================
+
+🎯 Target: https://ptis.scipl.info.in/en/
+🕒 Session Duration: 0:09:06
+🐾 Steps Taken: 10
+💰 Total Reward: 346.0
+----------------------------------------------------------------------------------------------------
+
+🚨 VULNERABILITIES FOUND: 3 🚨
+
+--- VULNERABILITY #1 ---
+  Type        : OPEN_REDIRECT
+  URL         : https://ptis.scipl.info.in/en/
+  Parameter   : $ACTION_KEY
+  Confidence  : 100%
+  Technique   : unvalidated_redirect
+  Payload     : https://example.com/pentest_verify
+  AI Summary  : N/A
+  Source → Sink: N/A → N/A
+  Filters Bypassed: []
+  Validation  : http_status_redirect
+  Test URL    : https://ptis.scipl.info.in/en/?%24ACTION_KEY=https%3A%2F%2Fexample.com%2Fpentest_verify
+--------------------------
+
+--- VULNERABILITY #2 ---
+  Type        : OPEN_REDIRECT
+  URL         : https://ptis.scipl.info.in/en/
+  Parameter   : $ACTION_REF_1
+  Confidence  : 100%
+  Technique   : unvalidated_redirect
+  Payload     : https://example.com/pentest_verify
+  AI Summary  : N/A
+  Source → Sink: N/A → N/A
+  Filters Bypassed: []
+  Validation  : http_status_redirect
+  Test URL    : https://ptis.scipl.info.in/en/?%24ACTION_REF_1=https%3A%2F%2Fexample.com%2Fpentest_verify
+--------------------------
+
+--- VULNERABILITY #3 ---
+  Type        : OPEN_REDIRECT
+  URL         : https://ptis.scipl.info.in/en/
+  Parameter   : locale
+  Confidence  : 100%
+  Technique   : unvalidated_redirect
+  Payload     : https://example.com/pentest_verify
+  AI Summary  : N/A
+  Source → Sink: N/A → N/A
+  Filters Bypassed: []
+  Validation  : http_status_redirect
+  Test URL    : https://ptis.scipl.info.in/en/?locale=https%3A%2F%2Fexample.com%2Fpentest_verify
+--------------------------
+
+====================================================================================================
+FINAL PERFORMANCE & PERSISTENT STATUS:
+  Session Learning Score   : 2.000
+  Lifetime Experience Score: 409.275
+  Session Confidence Score : 0.600
+  Total Sessions Mastered  : 17
+  Discovered Endpoints Pool: 6
+  Policy Weight Version    : Epoch #15
+  Model File Saved To      : C:\Users\Pravin.Tambe\Downloads\AI-Pestest-Bot-main\AI-Pestest-Bot-main\models\observation_model_final.zip
+  ASSESSMENT: 3 vulnerabilities successfully found!
+
+[REPORT] [+] Professional PDF report successfully generated at:
+         C:\Users\Pravin.Tambe\Downloads\AI-Pestest-Bot-main\AI-Pestest-Bot-main\logs\reports\pentest_report_ptis_scipl_info_in_en__20261008_153050.pdf
+
+
+================================================================================
+  Session Ended  : 2026-10-08 15:30:50
+  Duration       : 00h 09m 06s
+  Findings       : 3
+  Payloads Tested: 0
+=
+  Session Ended  : 2026-10-08 15:30:50
+  Duration       : 00h 09m 06s
+  Findings       : 3
+  Payloads Tested: 0
+=
+  Session Ended  : 2026-10-08 15:30:50
+  Duration       : 00h 09m 06s
+  Findings       : 3
+  Payloads Tested: 0
+=
+  Session Ended  : 2026-10-08 15:30:50
+  Duration       : 00h 09m 06s
+  Findings       : 3
+  Payloads Tested: 0
+=
+  Session Ended  : 2026-10-08 15:30:50
+  Duration       : 00h 09m 06s
+  Findings       : 3
+  Payloads Tested: 0
+=
+  Session Ended  : 2026-10-08 15:30:50
+  Duration       : 00h 09m 06s
+  Findings       : 3
+  Payloads Tested: 0
+=
+  Session Ended  : 2026-10-08 15:30:50
+  Duration       : 00h 09m 06s
+  Findings       : 3
+  Payloads Tested: 0
+=
+  Session Ended  : 2026-10-08 15:30:50
+  Duration       : 00h 09m 06s
+  Findings       : 3
+  Payloads Tested: 0
+=
+  Session Ended  : 2026-10-08 15:30:50
+  Duration       : 00h 09m 06s
+  Findings       : 3
+  Payloads Tested: 0
+=
+  Session Ended  : 2026-10-08 15:30:50
+  Duration       : 00h 09m 06s
+  Findings       : 3
+  Payloads Tested: 0
+=
+  Session Ended  : 2026-10-08 15:30:50
+  Duration       : 00h 09m 06s
+  Findings       : 3
+  Payloads Tested: 0
+=
+  Session Ended  : 2026-10-08 15:30:50
+  Duration       : 00h 09m 06s
+  Findings       : 3
+  Payloads Tested: 0
+=
+  Session Ended  : 2026-10-08 15:30:50
+  Duration       : 00h 09m 06s
+  Findings       : 3
+  Payloads Tested: 0
+=
+  Session Ended  : 2026-10-08 15:30:50
+  Duration       : 00h 09m 06s
+  Findings       : 3
+  Payloads Tested: 0
+=
+  Session Ended  : 2026-10-08 15:30:50
+  Duration       : 00h 09m 06s
+  Findings       : 3
+  Payloads Tested: 0
+=
+  Session Ended  : 2026-10-08 15:30:50
+  Duration       : 00h 09m 06s
+  Findings       : 3
+  Payloads Tested: 0
+=
+  Session Ended  : 2026-10-08 15:30:50
+  Duration       : 00h 09m 06s
+  Findings       : 3
+  Payloads Tested: 0
+=
+  Session Ended  : 2026-10-08 15:30:50
+  Duration       : 00h 09m 06s
+  Findings       : 3
+  Payloads Tested: 0
+=
+  Session Ended  : 2026-10-08 15:30:50
+  Duration       : 00h 09m 06s
+  Findings       : 3
+  Payloads Tested: 0
+=
+  Session Ended  : 2026-10-08 15:30:50
+  Duration       : 00h 09m 06s
+  Findings       : 3
+  Payloads Tested: 0
+=
+  Session Ended  : 2026-10-08 15:30:50
+  Duration       : 00h 09m 06s
+  Findings       : 3
+  Payloads Tested: 0
+=
+  Session Ended  : 2026-10-08 15:30:50
+  Duration       : 00h 09m 06s
+  Findings       : 3
+  Payloads Tested: 0
+=
+  Session Ended  : 2026-10-08 15:30:50
+  Duration       : 00h 09m 06s
+  Findings       : 3
+  Payloads Tested: 0
+=
+  Session Ended  : 2026-10-08 15:30:50
+  Duration       : 00h 09m 06s
+  Findings       : 3
+  Payloads Tested: 0
+=
+  Session Ended  : 2026-10-08 15:30:50
+  Duration       : 00h 09m 06s
+  Findings       : 3
+  Payloads Tested: 0
+=
+  Session Ended  : 2026-10-08 15:30:50
+  Duration       : 00h 09m 06s
+  Findings       : 3
+  Payloads Tested: 0
+=
+  Session Ended  : 2026-10-08 15:30:50
+  Duration       : 00h 09m 06s
+  Findings       : 3
+  Payloads Tested: 0
+=
+  Session Ended  : 2026-10-08 15:30:50
+  Duration       : 00h 09m 06s
+  Findings       : 3
+  Payloads Tested: 0
+=
+  Session Ended  : 2026-10-08 15:30:50
+  Duration       : 00h 09m 06s
+  Findings       : 3
+  Payloads Tested: 0
+=
+  Session Ended  : 2026-10-08 15:30:50
+  Duration       : 00h 09m 06s
+  Findings       : 3
+  Payloads Tested: 0
+=
+  Session Ended  : 2026-10-08 15:30:50
+  Duration       : 00h 09m 06s
+  Findings       : 3
+  Payloads Tested: 0
+=
+  Session Ended  : 2026-10-08 15:30:50
+  Duration       : 00h 09m 06s
+  Findings       : 3
+  Payloads Tested: 0
+=
+  Session Ended  : 2026-10-08 15:30:50
+  Duration       : 00h 09m 06s
+  Findings       : 3
+  Payloads Tested: 0
+=
+  Session Ended  : 2026-10-08 15:30:50
+  Duration       : 00h 09m 06s
+  Findings       : 3
+  Payloads Tested: 0
+=
+  Session Ended  : 2026-10-08 15:30:50
+  Duration       : 00h 09m 06s
+  Findings       : 3
+  Payloads Tested: 0
+=
+  Session Ended  : 2026-10-08 15:30:50
+  Duration       : 00h 09m 06s
+  Findings       : 3
+  Payloads Tested: 0
+=
+  Session Ended  : 2026-10-08 15:30:50
+  Duration       : 00h 09m 06s
+  Findings       : 3
+  Payloads Tested: 0
+=
+  Session Ended  : 2026-10-08 15:30:50
+  Duration       : 00h 09m 06s
+  Findings       : 3
+  Payloads Tested: 0
+=
+  Session Ended  : 2026-10-08 15:30:50
+  Duration       : 00h 09m 06s
+  Findings       : 3
+  Payloads Tested: 0
+=
+  Session Ended  : 2026-10-08 15:30:50
+  Duration       : 00h 09m 06s
+  Findings       : 3
+  Payloads Tested: 0
+=
+  Session Ended  : 2026-10-08 15:30:50
+  Duration       : 00h 09m 06s
+  Findings       : 3
+  Payloads Tested: 0
+=
+  Session Ended  : 2026-10-08 15:30:50
+  Duration       : 00h 09m 06s
+  Findings       : 3
+  Payloads Tested: 0
+=
+  Session Ended  : 2026-10-08 15:30:50
+  Duration       : 00h 09m 06s
+  Findings       : 3
+  Payloads Tested: 0
+=
+  Session Ended  : 2026-10-08 15:30:50
+  Duration       : 00h 09m 06s
+  Findings       : 3
+  Payloads Tested: 0
+=
+  Session Ended  : 2026-10-08 15:30:50
+  Duration       : 00h 09m 06s
+  Findings       : 3
+  Payloads Tested: 0
+=
+  Session Ended  : 2026-10-08 15:30:50
+  Duration       : 00h 09m 06s
+  Findings       : 3
+  Payloads Tested: 0
+=
+  Session Ended  : 2026-10-08 15:30:50
+  Duration       : 00h 09m 06s
+  Findings       : 3
+  Payloads Tested: 0
+=
+  Session Ended  : 2026-10-08 15:30:50
+  Duration       : 00h 09m 06s
+  Findings       : 3
+  Payloads Tested: 0
+=
+  Session Ended  : 2026-10-08 15:30:50
+  Duration       : 00h 09m 06s
+  Findings       : 3
+  Payloads Tested: 0
+=
+  Session Ended  : 2026-10-08 15:30:50
+  Duration       : 00h 09m 06s
+  Findings       : 3
+  Payloads Tested: 0
+=
+  Session Ended  : 2026-10-08 15:30:50
+  Duration       : 00h 09m 06s
+  Findings       : 3
+  Payloads Tested: 0
+=
+  Session Ended  : 2026-10-08 15:30:50
+  Duration       : 00h 09m 06s
+  Findings       : 3
+  Payloads Tested: 0
+=
+  Session Ended  : 2026-10-08 15:30:50
+  Duration       : 00h 09m 06s
+  Findings       : 3
+  Payloads Tested: 0
+=
+  Session Ended  : 2026-10-08 15:30:50
+  Duration       : 00h 09m 06s
+  Findings       : 3
+  Payloads Tested: 0
+=
+  Session Ended  : 2026-10-08 15:30:50
+  Duration       : 00h 09m 06s
+  Findings       : 3
+  Payloads Tested: 0
+=
+  Session Ended  : 2026-10-08 15:30:50
+  Duration       : 00h 09m 06s
+  Findings       : 3
+  Payloads Tested: 0
+=
+  Session Ended  : 2026-10-08 15:30:50
+  Duration       : 00h 09m 06s
+  Findings       : 3
+  Payloads Tested: 0
+=
+  Session Ended  : 2026-10-08 15:30:50
+  Duration       : 00h 09m 06s
+  Findings       : 3
+  Payloads Tested: 0
+=
+  Session Ended  : 2026-10-08 15:30:50
+  Duration       : 00h 09m 06s
+  Findings       : 3
+  Payloads Tested: 0
+=
+  Session Ended  : 2026-10-08 15:30:50
+  Duration       : 00h 09m 06s
+  Findings       : 3
+  Payloads Tested: 0
+=
+  Session Ended  : 2026-10-08 15:30:50
+  Duration       : 00h 09m 06s
+  Findings       : 3
+  Payloads Tested: 0
+=
+  Session Ended  : 2026-10-08 15:30:50
+  Duration       : 00h 09m 06s
+  Findings       : 3
+  Payloads Tested: 0
+=
+  Session Ended  : 2026-10-08 15:30:50
+  Duration       : 00h 09m 06s
+  Findings       : 3
+  Payloads Tested: 0
+=
+  Session Ended  : 2026-10-08 15:30:50
+  Duration       : 00h 09m 06s
+  Findings       : 3
+  Payloads Tested: 0
+=
+  Session Ended  : 2026-10-08 15:30:50
+  Duration       : 00h 09m 06s
+  Findings       : 3
+  Payloads Tested: 0
+=
+  Session Ended  : 2026-10-08 15:30:50
+  Duration       : 00h 09m 06s
+  Findings       : 3
+  Payloads Tested: 0
+=
+  Session Ended  : 2026-10-08 15:30:50
+  Duration       : 00h 09m 06s
+  Findings       : 3
+  Payloads Tested: 0
+=
+  Session Ended  : 2026-10-08 15:30:50
+  Duration       : 00h 09m 06s
+  Findings       : 3
+  Payloads Tested: 0
+=
+  Session Ended  : 2026-10-08 15:30:50
+  Duration       : 00h 09m 06s
+  Findings       : 3
+  Payloads Tested: 0
+=
+  Session Ended  : 2026-10-08 15:30:50
+  Duration       : 00h 09m 06s
+  Findings       : 3
+  Payloads Tested: 0
+=
+  Session Ended  : 2026-10-08 15:30:50
+  Duration       : 00h 09m 06s
+  Findings       : 3
+  Payloads Tested: 0
+=
+  Session Ended  : 2026-10-08 15:30:50
+  Duration       : 00h 09m 06s
+  Findings       : 3
+  Payloads Tested: 0
+=
+  Session Ended  : 2026-10-08 15:30:50
+  Duration       : 00h 09m 06s
+  Findings       : 3
+  Payloads Tested: 0
+=
+  Session Ended  : 2026-10-08 15:30:50
+  Duration       : 00h 09m 06s
+  Findings       : 3
+  Payloads Tested: 0
+=
+  Session Ended  : 2026-10-08 15:30:50
+  Duration       : 00h 09m 06s
+  Findings       : 3
+  Payloads Tested: 0
+=
+  Session Ended  : 2026-10-08 15:30:50
+  Duration       : 00h 09m 06s
+  Findings       : 3
+  Payloads Tested: 0
+=
+  Session Ended  : 2026-10-08 15:30:50
+  Duration       : 00h 09m 06s
+  Findings       : 3
+  Payloads Tested: 0
+=
+  Session Ended  : 2026-10-08 15:30:50
+  Duration       : 00h 09m 06s
+  Findings       : 3
+  Payloads Tested: 0
+=
+  Session Ended  : 2026-10-08 15:30:50
+  Duration       : 00h 09m 06s
+  Findings       : 3
+  Payloads Tested: 0
+=
+  Session Ended  : 2026-10-08 15:30:50
+  Duration       : 00h 09m 06s
+  Findings       : 3
+  Payloads Tested: 0
+=

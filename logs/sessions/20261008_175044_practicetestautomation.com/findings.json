@@ -1,0 +1,79 @@
+{
+  "generated_at": "2026-10-08T19:25:36.984265",
+  "target": "https://practicetestautomation.com/practice-test-login/",
+  "total_findings": 6,
+  "findings": [
+    {
+      "type": "OPEN_REDIRECT",
+      "parameter": "location.hash",
+      "url": "https://practicetestautomation.com/",
+      "test_url": "https://practicetestautomation.com/?location.hash=%2F%2Fexample.com%2Fpentest_verify",
+      "payload": "//example.com/pentest_verify",
+      "technique": "unvalidated_redirect",
+      "confidence": 1.0,
+      "validation_method": "http_status_redirect",
+      "description": "Parameter location.hash allows arbitrary external URL redirection to https://practicetestautomation.com/?location_hash=%2F%2Fexample.com%2Fpentest_verify",
+      "logged_at": "2026-10-08T19:25:29.311901"
+    },
+    {
+      "type": "OPEN_REDIRECT",
+      "parameter": "objectL10n.sliderTime",
+      "url": "https://practicetestautomation.com/",
+      "test_url": "https://practicetestautomation.com/?objectL10n.sliderTime=%2F%2Fexample.com%2Fpentest_verify",
+      "payload": "//example.com/pentest_verify",
+      "technique": "unvalidated_redirect",
+      "confidence": 1.0,
+      "validation_method": "http_status_redirect",
+      "description": "Parameter objectL10n.sliderTime allows arbitrary external URL redirection to https://practicetestautomation.com/?objectL10n_sliderTime=%2F%2Fexample.com%2Fpentest_verify",
+      "logged_at": "2026-10-08T19:25:29.314623"
+    },
+    {
+      "type": "OPEN_REDIRECT",
+      "parameter": "objectL10n.autoRotateSlider",
+      "url": "https://practicetestautomation.com/",
+      "test_url": "https://practicetestautomation.com/?objectL10n.autoRotateSlider=%2F%2Fexample.com%2Fpentest_verify",
+      "payload": "//example.com/pentest_verify",
+      "technique": "unvalidated_redirect",
+      "confidence": 1.0,
+      "validation_method": "http_status_redirect",
+      "description": "Parameter objectL10n.autoRotateSlider allows arbitrary external URL redirection to https://practicetestautomation.com/?objectL10n_autoRotateSlider=%2F%2Fexample.com%2Fpentest_verify",
+      "logged_at": "2026-10-08T19:25:29.316744"
+    },
+    {
+      "type": "OPEN_REDIRECT",
+      "parameter": "location.hash",
+      "url": "https://practicetestautomation.com",
+      "test_url": "https://practicetestautomation.com?location.hash=%2F%2Fexample.com%2Fpentest_verify",
+      "payload": "//example.com/pentest_verify",
+      "technique": "unvalidated_redirect",
+      "confidence": 1.0,
+      "validation_method": "http_status_redirect",
+      "description": "Parameter location.hash allows arbitrary external URL redirection to https://practicetestautomation.com/?location_hash=%2F%2Fexample.com%2Fpentest_verify",
+      "logged_at": "2026-10-08T19:25:29.320766"
+    },
+    {
+      "type": "OPEN_REDIRECT",
+      "parameter": "objectL10n.sliderTime",
+      "url": "https://practicetestautomation.com",
+      "test_url": "https://practicetestautomation.com?objectL10n.sliderTime=%2F%2Fexample.com%2Fpentest_verify",
+      "payload": "//example.com/pentest_verify",
+      "technique": "unvalidated_redirect",
+      "confidence": 1.0,
+      "validation_method": "http_status_redirect",
+      "description": "Parameter objectL10n.sliderTime allows arbitrary external URL redirection to https://practicetestautomation.com/?objectL10n_sliderTime=%2F%2Fexample.com%2Fpentest_verify",
+      "logged_at": "2026-10-08T19:25:29.321758"
+    },
+    {
+      "type": "OPEN_REDIRECT",
+      "parameter": "objectL10n.autoRotateSlider",
+      "url": "https://practicetestautomation.com",
+      "test_url": "https://practicetestautomation.com?objectL10n.autoRotateSlider=%2F%2Fexample.com%2Fpentest_verify",
+      "payload": "//example.com/pentest_verify",
+      "technique": "unvalidated_redirect",
+      "confidence": 1.0,
+      "validation_method": "http_status_redirect",
+      "description": "Parameter objectL10n.autoRotateSlider allows arbitrary external URL redirection to https://practicetestautomation.com/?objectL10n_autoRotateSlider=%2F%2Fexample.com%2Fpentest_verify",
+      "logged_at": "2026-10-08T19:25:29.323035"
+    }
+  ]
+}
